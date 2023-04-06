@@ -2,19 +2,24 @@ import sys
 import pygame
 import os
 
+import constants as con
+
 options = ['start', 'info', 'exit']
 opt_num = 0
 opt_check = options[opt_num]
 
 if __name__ == '__main__':
     pygame.display.init()
-    # pygame.display.set_caption('placeholer')
+    pygame.display.set_caption('Volkhvitz')
 
     clock = pygame.time.Clock()
 
+    pygame.display.set_icon(pygame.image.load(os.path.join('spritesheet', 'icon.png')))
+
     menu_img = pygame.image.load(os.path.join('spritesheet', 'menu.png'))
     arrow_img = pygame.image.load(os.path.join('spritesheet', 'arrow.png'))
-    screen = pygame.display.set_mode([640, 480], pygame.FULLSCREEN)
+    screen = pygame.display.set_mode([con.SCR_WIDTH, con.SCR_HEIGHT], pygame.SCALED)
+
     screen.fill((0, 0, 0))
 
     in_menu = True
@@ -59,6 +64,8 @@ if __name__ == '__main__':
                 screen.blit(arrow_img, (490, 350))
             elif opt_check == 'exit':
                 screen.blit(arrow_img, (490, 382))
+
+        #if in_game is True:
 
         pygame.display.flip()
 
