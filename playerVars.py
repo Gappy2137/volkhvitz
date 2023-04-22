@@ -1,0 +1,15 @@
+canMove = True
+moving = False
+x = 200
+y = 200
+hsp = 0
+vsp = 0
+spd = 3
+width = 32
+height = 48
+animFrame = 0
+animFrames = 1
+animSpeed = 0.15
+hitboxX = 13
+hitboxY = 25
+hitboxSize = 8
