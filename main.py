@@ -1,37 +1,20 @@
 import sys
 import pygame
 import os
-
-import constants as con
-import playerVars as player
-
-options = ['start', 'info', 'exit']
-opt_num = 0
-opt_check = options[opt_num]
+from core.variables import *
+from core.classes import *
 
 if __name__ == '__main__':
     pygame.display.init()
     pygame.display.set_caption('Volkhvitz')
+    pygame.mouse.set_visible(False)
 
     clock = pygame.time.Clock()
 
     pygame.display.set_icon(pygame.image.load(os.path.join('spritesheet', 'icon.png')))
-
-    menu_img = pygame.image.load(os.path.join('spritesheet', 'menu.png'))
-    arrow_img = pygame.image.load(os.path.join('spritesheet', 'arrow.png'))
-
-    sprite_player = [pygame.image.load(os.path.join('spritesheet', 'player_frame_0.png')),
-                     pygame.image.load(os.path.join('spritesheet', 'player_frame_1.png')),
-                     pygame.image.load(os.path.join('spritesheet', 'player_frame_left.png')),
-                     pygame.image.load(os.path.join('spritesheet', 'player_frame_right.png'))]
-
-    screen = pygame.display.set_mode([con.SCR_WIDTH, con.SCR_HEIGHT], pygame.SCALED)
+    screen = pygame.display.set_mode(RESOLUTION, pygame.SCALED)
 
     screen.fill((0, 0, 0))
-
-    in_menu = True
-    in_game = False
-    in_info = False
 
     while True:
         for event in pygame.event.get():
@@ -45,12 +28,12 @@ if __name__ == '__main__':
                         opt_num = opt_num - 1
                         if opt_num < 0:
                             opt_num = 2
-                        opt_check = options[opt_num]
+                        opt_check = OPTIONS[opt_num]
                     if event.key == pygame.K_DOWN:
                         opt_num = opt_num + 1
                         if opt_num > 2:
                             opt_num = 0
-                        opt_check = options[opt_num]
+                        opt_check = OPTIONS[opt_num]
                     if event.key == pygame.K_RETURN:
                         if opt_check == 'start':
                             in_menu = False
@@ -61,61 +44,60 @@ if __name__ == '__main__':
                             in_game = False
                             in_info = True
                             screen.fill((0, 0, 0))
-                            screen.blit(arrow_img, (490, 350))
+                            screen.blit(ARROW_IMG, (490, 350))
                         elif opt_check == 'exit':
                             pygame.quit()
                             sys.exit()
 
         if in_menu is True:
-            screen.blit(menu_img, (0, 0))
+            screen.blit(MENU_IMG, (0, 0))
             if opt_check == 'start':
-                screen.blit(arrow_img, (490, 317))
+                screen.blit(ARROW_IMG, (490, 317))
             elif opt_check == 'info':
-                screen.blit(arrow_img, (490, 350))
+                screen.blit(ARROW_IMG, (490, 350))
             elif opt_check == 'exit':
-                screen.blit(arrow_img, (490, 382))
+                screen.blit(ARROW_IMG, (490, 382))
 
         if in_game is True:
 
             keys = pygame.key.get_pressed()
 
-            if player.canMove:
+            if Player.can_move:
                 if keys[pygame.K_DOWN] and not keys[pygame.K_UP]:
-                    player.vsp = player.spd
+                    Player.vsp = Player.SPD
                 elif keys[pygame.K_UP] and not keys[pygame.K_DOWN]:
-                    player.vsp = -player.spd
+                    Player.vsp = -Player.SPD
                 else:
-                    player.vsp = 0
+                    Player.vsp = 0
 
                 if keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-                    player.hsp = -player.spd
+                    Player.hsp = -Player.SPD
                 elif keys[pygame.K_RIGHT] and not keys[pygame.K_LEFT]:
-                    player.hsp = player.spd
+                    Player.hsp = Player.SPD
                 else:
-                    player.hsp = 0
+                    Player.hsp = 0
 
-            player.x += player.hsp
-            player.y += player.vsp
+            Player.x += Player.hsp
+            Player.y += Player.vsp
 
-            if player.hsp and player.vsp != 0:
-                player.moving = True
+            if Player.hsp and Player.vsp != 0:
+                Player.is_moving = True
             else:
-                player.moving = False
+                Player.is_moving = False
 
-            if player.hsp < 0:
-                player.animFrame = 2
-            elif player.hsp > 0:
-                player.animFrame = 3
-            elif player.hsp == 0:
-                player.animFrame += player.animSpeed
-                if player.animFrame >= player.animFrames + 0.9:
-                    player.animFrame = 0
+            if Player.hsp < 0:
+                Player.STAT_MOV0 = 2
+            elif Player.hsp > 0:
+                Player.STAT_MOV0 = 3
+            elif Player.hsp == 0:
+                Player.STAT_MOV0 += Player.ANIM_SPD
+                if Player.STAT_MOV0 >= Player.STAT_MOV1 + 0.9:
+                    Player.STAT_MOV0 = 0
 
-            #background
             screen.fill((255, 255, 255))
 
-            screen.blit(sprite_player[int(player.animFrame)], (player.x, player.y))
+            screen.blit(PLAYER_SPRITES[int(Player.STAT_MOV0)], (Player.x, Player.y))
 
         pygame.display.flip()
 
-        clock.tick(60)
+        clock.tick(FPS)
