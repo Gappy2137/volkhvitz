@@ -5,7 +5,7 @@ from imports import *
 class Player:
     def __init__(self):
         # Const.
-        self.SPD = 3.0
+        self.SPD = 2.5
         self.WIDTH = 32
         self.HEIGHT = 48
         self.HITBOX_X = 13
@@ -18,8 +18,8 @@ class Player:
         self.curr_anim_no_of_frs = 1
         self.can_move = True
         self.is_moving = False
-        self.x = 200
-        self.y = 200
+        self.x = 180
+        self.y = 370
         self.hsp = 0
         self.vsp = 0
 
@@ -61,3 +61,29 @@ class Player:
             self.current_frame += self.ANIM_SPD
             if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
                 self.current_frame = 0
+
+
+class Enemy:
+    def __init__(self):
+        # Const.
+        self.SPD = 2.5
+        self.WIDTH = 32
+        self.HEIGHT = 48
+        self.HITBOX_X = 13
+        self.HITBOX_Y = 25
+        self.ANIM_SPD = 0.15
+        # Var.
+        self.current_frame = 0
+        self.curr_anim_no_of_frs = 3
+        self.can_move = True
+        self.is_moving = False
+        self.move_pattern = 0
+        self.x = 180
+        self.y = 170
+        self.hsp = 0
+        self.vsp = 0
+
+    def set_frame(self):
+        self.current_frame += self.ANIM_SPD
+        if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
+            self.current_frame = 0

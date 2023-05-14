@@ -1,16 +1,17 @@
 from imports import *
 
 if __name__ == '__main__':
-    pygame.display.init()
-    pygame.display.set_caption('Volkhvitz')
-    pygame.mouse.set_visible(False)
-
     clock = pygame.time.Clock()
 
+    pygame.display.init()
+    pygame.mouse.set_visible(False)
+    pygame.display.set_caption('Volkhvitz')
     pygame.display.set_icon(pygame.image.load(os.path.join('spritesheet', 'icon.png')))
     screen = pygame.display.set_mode(RESOLUTION, pygame.SCALED)
 
     player = Player()
+
+    enemy = Enemy()
 
     screen.fill((0, 0, 0))
 
@@ -77,6 +78,12 @@ if __name__ == '__main__':
             player.set_frame()
 
             screen.fill((255, 255, 255))
+
+            hud_render(screen)
+
+            place(screen, enemy)
+
+            enemy.set_frame()
 
             player_render(screen, player)
 
