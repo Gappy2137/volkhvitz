@@ -1,8 +1,9 @@
 """Constants and variables."""
+from imports import *
 from pathlib import Path
-from main import *
 
 """Constants."""
+# Game directory.
 DIR = str(Path(__file__).parents[1])
 
 # Menu constants.
@@ -11,11 +12,6 @@ RESOLUTION = [640, 480]
 
 MENU_IMG = pygame.image.load(os.path.join(DIR + r'\spritesheet', 'menu.png'))
 ARROW_IMG = pygame.image.load(os.path.join(DIR + r'\spritesheet', 'arrow.png'))
-
-PLAYER_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet', 'player_frame_0.png')),
-                  pygame.image.load(os.path.join(DIR + r'\spritesheet', 'player_frame_1.png')),
-                  pygame.image.load(os.path.join(DIR + r'\spritesheet', 'player_frame_left.png')),
-                  pygame.image.load(os.path.join(DIR + r'\spritesheet', 'player_frame_right.png'))]
 
 # Game constants.
 FPS = 60
