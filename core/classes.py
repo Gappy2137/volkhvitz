@@ -5,13 +5,15 @@ from imports import *
 class Player:
     def __init__(self):
         # Const.
-        self.SPD = 2.5
+        self.SPD = 3
         self.WIDTH = 32
         self.HEIGHT = 48
         self.HITBOX_X = 13
         self.HITBOX_Y = 25
         self.HITBOX_SIZE = 8
         self.ANIM_SPD = 0.15
+        self.DIAG_MULTIPLIER = 0.75
+        self.FOCUS_MULTIPLIER = 0.5
         # Var.
         self.keys = []
         self.current_frame = 0
@@ -47,6 +49,14 @@ class Player:
                 self.hsp = self.SPD
             else:
                 self.hsp = 0
+
+            if abs(self.hsp) == abs(self.SPD) and abs(self.vsp) == abs(self.SPD):
+                self.hsp *= self.DIAG_MULTIPLIER
+                self.vsp *= self.DIAG_MULTIPLIER
+
+            if self.keys[pygame.K_LSHIFT]:
+                self.hsp *= self.FOCUS_MULTIPLIER
+                self.vsp *= self.FOCUS_MULTIPLIER
 
     def make_move(self):
         self.x += self.hsp

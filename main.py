@@ -49,9 +49,9 @@ if __name__ == '__main__':
                             sys.exit()
 
                 if in_info is True:
-                    in_menu = True
+                    in_menu = False
                     in_game = False
-                    in_info = False
+                    in_info = True
 
         if in_menu is True:
             screen.blit(MENU_IMG, (0, 0))
@@ -63,8 +63,11 @@ if __name__ == '__main__':
                 screen.blit(ARROW_IMG, (490, 382))
 
         if in_info is True:
-            # screen.blit(INFO_IMG, (0, 0))
-            pass
+            screen.blit(INFO_IMG, (0, 0))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    in_info = False
+                    in_menu = True
 
         if in_game is True:
             player.get_keys()
