@@ -1,8 +1,8 @@
 """Sprites."""
 from imports import *
 
-BULLETS_SPRITES = [ pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'enemy_bullet_big.png')),
-                    pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'enemy_bullet_small.png')),
+BULLETS_SPRITES = [ pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'enemy_bullet_small.png')),
+                    pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'enemy_bullet_big.png')),
                     pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'enemy_laser.png')),
                     pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'player_bullet_power_0.png')),
                     pygame.image.load(os.path.join(DIR + r'\spritesheet\bullets', 'player_bullet_power_1.png')),
@@ -31,9 +31,7 @@ RED_FAIRY_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\fairy_r
                      pygame.image.load(os.path.join(DIR + r'\spritesheet\fairy_red', 'fairy_red_frame_2.png')),
                      pygame.image.load(os.path.join(DIR + r'\spritesheet\fairy_red', 'fairy_red_frame_3.png'))]
 
-HUD_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'hud_life.png')),
-               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'main_hud.png')),
-               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_0.png')),
+HUD_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_0.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_1.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_2.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_3.png')),
@@ -42,7 +40,10 @@ HUD_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'hud_li
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_6.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_7.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_8.png')),
-               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_9.png'))]
+               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_9.png')),
+               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'hud_life.png')),
+               pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'main_hud.png')),
+]
 
 PLAYER_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_0.png')),
                   pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_1.png')),

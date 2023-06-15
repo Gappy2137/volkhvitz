@@ -17,6 +17,16 @@ INFO_IMG = pygame.image.load(os.path.join(DIR + r'\spritesheet', 'info.png'))
 # Game constants.
 FPS = 60
 
+# HUD constants.
+TEXT_WIDTH = 16
+TEXT_HEIGHT = 32
+POWER_X = 416
+POWER_Y = 160
+BARS_LEFT = 10
+BARS_TOP = 10
+BARS_RIGHT = 388
+BARS_BOTTOM = 472
+
 """Variables."""
 # Menu variables.
 opt_num = 0
@@ -25,3 +35,4 @@ opt_check = OPTIONS[opt_num]
 in_menu = True
 in_game = False
 in_info = False
+

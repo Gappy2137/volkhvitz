@@ -70,6 +70,7 @@ if __name__ == '__main__':
                     in_menu = True
 
         if in_game is True:
+
             player.get_keys()
 
             player.set_speed()
@@ -82,13 +83,23 @@ if __name__ == '__main__':
 
             screen.fill((255, 255, 255))
 
-            hud_render(screen)
-
             place(screen, enemy)
 
             enemy.set_frame()
 
+            player.shoot_bullet()
+
+            for i in bullet_list:
+                bullet_render(screen, i)
+                i.set_frame()
+                i.make_move()
+                i.destroy_cond()
+
             player_render(screen, player)
+
+            hud_render(screen)
+
+            text_render(screen, str(power), POWER_X, POWER_Y)
 
         pygame.display.flip()
 
