@@ -72,15 +72,21 @@ class Player:
             if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
                 self.current_frame = 0
 
+    def shoot_bullet(self):
+        if self.keys[pygame.K_z]:
+            pass
+
 
 class Enemy:
     def __init__(self):
         # Const.
+        self.SPR = []
         self.SPD = 2.5
         self.WIDTH = 32
-        self.HEIGHT = 48
+        self.HEIGHT = 32
         self.HITBOX_X = 13
         self.HITBOX_Y = 25
+        self.HITBOX_SIZE = 8
         self.ANIM_SPD = 0.15
         # Var.
         self.current_frame = 0
@@ -97,3 +103,35 @@ class Enemy:
         self.current_frame += self.ANIM_SPD
         if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
             self.current_frame = 0
+
+
+class FairyRed(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.SPR = RED_FAIRY_SPRITES
+        self.WIDTH = 32
+        self.HEIGHT = 32
+        self.HITBOX_X = 10
+        self.HITBOX_Y = 11
+        self.HITBOX_SIZE = 12
+
+
+class FairyBlue(FairyRed):
+    def __init__(self):
+        super().__init__()
+        self.SPR = BLUE_FAIRY_SPRITES
+
+
+class Bullet:
+    def __init__(self):
+        # Const.
+        self.SPD = 3
+        self.WIDTH = 1
+        self.HEIGHT = 1
+        self.HITBOX_X = 1
+        self.HITBOX_Y = 1
+        # Var.
+        self.x = 0
+        self.y = 0
+        self.hsp = 0
+        self.vsp = 0

@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     player = Player()
 
-    enemy = Enemy()
+    enemy = FairyBlue()
 
     screen.fill((0, 0, 0))
 

@@ -4,8 +4,8 @@ import sys
 import os
 
 from core.varconst import *
-from core.classes import *
 from core.sprites import *
+from core.classes import *
 
 from handlers.collision_handler import *
 from handlers.renderer import *

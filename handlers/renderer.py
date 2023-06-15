@@ -10,4 +10,4 @@ def hud_render(screen):
 
 
 def place(screen, enemy):
-    screen.blit(BLUE_FAIRY_SPRITES[int(enemy.current_frame)], (enemy.x, enemy.y))
+    screen.blit(enemy.SPR[int(enemy.current_frame)], (enemy.x, enemy.y))
