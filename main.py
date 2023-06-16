@@ -12,6 +12,7 @@ if __name__ == '__main__':
     player = Player()
 
     enemy = Enemy()
+    pattern1 = EnemyPattern1(enemy.x, enemy.y, enemy.SPD)
 
     screen.fill((0, 0, 0))
 
@@ -87,6 +88,7 @@ if __name__ == '__main__':
             place(screen, enemy)
 
             enemy.set_frame()
+            enemy.move_y(pattern1.make_move())
 
             player_render(screen, player)
 

@@ -97,3 +97,10 @@ class Enemy:
         self.current_frame += self.ANIM_SPD
         if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
             self.current_frame = 0
+
+    def move_x(self, x):
+        self.x = x
+
+    def move_y(self, y):
+        self.y = y
+
