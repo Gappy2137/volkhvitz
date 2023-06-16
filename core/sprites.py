@@ -19,6 +19,7 @@ FX_SPRITES = [  pygame.image.load(os.path.join(DIR + r'\spritesheet\fx', 'player
                 pygame.image.load(os.path.join(DIR + r'\spritesheet\fx', 'defeat_fx_frame_1.png')),
                 pygame.image.load(os.path.join(DIR + r'\spritesheet\fx', 'defeat_fx_frame_2.png')),
                 pygame.image.load(os.path.join(DIR + r'\spritesheet\fx', 'defeat_fx_frame_3.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\fx', 'powerup.png'))
               ]
 
 BLUE_FAIRY_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\fairy_blue', 'fairy_blue_frame_0.png')),

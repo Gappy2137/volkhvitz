@@ -1,5 +1,7 @@
 from imports import *
 
+# niewazne jak zle jest to napisane to jest na szybko musisz zrozumiec xdd
+
 if __name__ == '__main__':
     clock = pygame.time.Clock()
 
@@ -11,7 +13,10 @@ if __name__ == '__main__':
 
     player = Player()
 
-    fairy = create_enemy(150, 250, "red_fairy")
+    create_enemy(100, 250, FairyRed())
+    create_enemy(100, 200, FairyRed())
+    create_enemy(100, 100, FairyRed())
+    create_enemy(250, 250, FairyBlue())
 
     screen.fill((0, 0, 0))
 
@@ -81,25 +86,54 @@ if __name__ == '__main__':
 
             player.set_frame()
 
-            screen.fill((255, 255, 255))
+            screen.fill((255, 100, 255))
 
-            place(screen, fairy)
-
-            fairy.set_frame()
+            for bullet in bullet_list:
+                #pygame.draw.rect(screen, (0, 255, 255), (bullet.x + bullet.hitbox_x, bullet.y + bullet.HITBOX_Y, bullet.width, bullet.HEIGHT))
+                for enemy in enemy_list:
+                    if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.HITBOX_Y, bullet.width, bullet.HEIGHT,
+                                 enemy.x, enemy.y, enemy.WIDTH, enemy.WIDTH):
+                        if not bullet.is_hazard:
+                            bullet_list.remove(bullet)
+                            #enemy_list.remove(enemy)
+                            enemy.health -= bullet.damage
+                            create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
+                                      random.uniform(enemy.y + enemy.HEIGHT/2, enemy.y + enemy.HEIGHT),
+                                      0, 0, 0, 0, 0, 0.45)
+                            if enemy.health <= 0:
+                                for i in range(random.randint(6, 12)):
+                                    create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
+                                              random.uniform(enemy.y + enemy.HEIGHT / 2, enemy.y + enemy.HEIGHT),
+                                              random.uniform(1, 3), random.uniform(2, 4), random.uniform(0, 359), 1, 0, 0.15)
 
             player.shoot_bullet()
 
-            for i in bullet_list:
-                bullet_render(screen, i)
-                i.set_frame()
-                i.make_move()
-                i.destroy_cond()
+            for bullet in bullet_list:
+                bullet.set_frame()
+                bullet.make_move()
+                bullet.destroy_cond()
+
+            for bullet in bullet_list:
+                bullet_render(screen, bullet)
+
+            for enemy in enemy_list:
+                enemy.set_frame()
+                enemy.check_vitals()
+
+            for enemy in enemy_list:
+                enemy_render(screen, enemy)
+
+            for fx in fx_list:
+                fx.set_frame()
+                fx.make_move()
+                fx_render(screen, fx)
 
             player_render(screen, player)
 
             hud_render(screen)
 
             text_render(screen, str(power), POWER_X, POWER_Y)
+            #text_render(screen, str(len(fx_list)), POWER_X, POWER_Y + 80)
 
         pygame.display.flip()
 

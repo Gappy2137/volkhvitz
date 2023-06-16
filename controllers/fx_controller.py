@@ -1,3 +1,3 @@
 from imports import *
 
-enemy_list = []
+fx_list = []

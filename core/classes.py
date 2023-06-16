@@ -14,7 +14,7 @@ class Player:
         self.ANIM_SPD = 0.15
         self.DIAG_MULTIPLIER = 0.75
         self.FOCUS_MULTIPLIER = 0.5
-        self.BULLET_SHOOTING_FREQ = 2
+        self.BULLET_SHOOTING_FREQ = 3
         # Var.
         self.keys = []
         self.current_frame = 0
@@ -88,15 +88,9 @@ class Player:
                 self.current_frame = 0
 
     def shoot_bullet(self):
-
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
-                bul = Bullet()
-                bul.vsp = -bul.SPD
-                bul.x = self.x + self.WIDTH/2 - bul.width/2
-                bul.y = self.y
-                bul.type = 0
-                bullet_list.append(bul)
+                create_bullet(self.x + self.WIDTH/2, self.y, False)
                 self.can_shoot = False
         else:
             self.can_shoot = True
@@ -137,6 +131,7 @@ class Enemy:
         self.vsp = 0
         self.can_shoot = True
         self.bullet_clock = 0
+        self.health = 1
 
     def set_frame(self):
         self.current_frame += self.ANIM_SPD
@@ -144,20 +139,28 @@ class Enemy:
             self.current_frame = 0
 
     def shoot_bullet(self):
+        if self.keys[pygame.K_x]:
+            if self.can_shoot is True:
+                create_bullet(self.x + self.WIDTH/2, self.y, False)
+                self.can_shoot = False
+        else:
+            self.can_shoot = True
+
         if self.can_shoot is False:
             self.bullet_clock += 1
             if self.bullet_clock > self.BULLET_SHOOTING_FREQ:
                 self.bullet_clock = 0
-                self.can_shoot = True
 
-        if self.keys[pygame.K_z]:
-            if self.can_shoot is True:
-                bul = Bullet()
-                bul.vsp = -bul.SPD
-                bul.x = self.x + self.WIDTH/2 - bul.width/2
-                bul.y = self.y
-                bullet_list.append(bul)
-                self.can_shoot = False
+        if self.bullet_clock == 0:
+            self.can_shoot = True
+
+    def check_vitals(self):
+        if self.health <= 0:
+            self.destroy()
+
+    def destroy(self):
+        enemy_list.remove(self)
+        del self
 
 
 class FairyRed(Enemy):
@@ -175,6 +178,7 @@ class FairyBlue(FairyRed):
     def __init__(self):
         super().__init__()
         self.SPR = BLUE_FAIRY_SPRITES
+        self.health = 10
 
 
 class Bullet:
@@ -193,11 +197,11 @@ class Bullet:
         self.width = 7
         self.hitbox_x = 3
         self.current_frame = 3
-        # 0 - player bullet 1 - enemy bullet
-        self.type = 0
+        # False - player's bullet, True - deals damage to player
+        self.is_hazard = False
 
     def set_frame(self):
-        if self.type == 0:
+        if self.is_hazard == 0:
             if power > 16:
                 self.current_frame = 4
             else:
@@ -210,9 +214,63 @@ class Bullet:
         self.y += self.vsp
 
     def destroy_cond(self):
-        if 0 > self.y > RESOLUTION[1]:
-            bullet_list.pop(0)
+        if out_of_bounds(self):
+            bullet_list.remove(self)
             del self
+
+
+# bruh nwm co ja tu zrobilemxddd
+def create_bullet(x, y, is_hazard):
+    bullet = Bullet()
+    bullet.x, bullet.y = x - bullet.width / 2, y
+    bullet.is_hazard = is_hazard
+    bullet.vsp = -bullet.SPD
+    bullet_list.append(bullet)
+    return bullet
+
+
+class Effect:
+    def __init__(self):
+        # Const.
+        self.SPR = FX_SPRITES
+        self.WIDTH = 1
+        self.HEIGHT = 1
+        # Var.
+        # 0 - end anim after last frame, 1 - continue animating
+        self.behaviour = 0
+        # 0 - player's bullet destruction, 1 - enemy destruction
+        self.type = 0
+        self.anim_spd = 0.1
+        self.x = 0
+        self.y = 0
+        self.hsp = 0
+        self.vsp = 0
+        self.current_frame = 0
+        self.curr_anim_no_of_frs = 1
+        self.angle = 0
+
+    def set_init_frame(self):
+        if self.type == 0:
+            self.current_frame = 0
+            self.curr_anim_no_of_frs = 4
+        elif self.type == 1:
+            self.current_frame = 5
+            self.curr_anim_no_of_frs = 3 + self.current_frame
+
+
+    def set_frame(self):
+        self.current_frame += self.anim_spd
+        if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
+            if self.behaviour == 0:
+                self.destroy()
+
+    def make_move(self):
+        self.x += self.hsp * math.cos(self.angle)
+        self.y += self.vsp * -math.sin(self.angle)
+
+    def destroy(self):
+        fx_list.remove(self)
+        del self
 
 
 class Powerup:

@@ -1,20 +1,24 @@
 from imports import *
 
 
+def fx_render(screen, fx):
+    screen.blit(fx.SPR[int(fx.current_frame)], (fx.x, fx.y))
+
+
+def enemy_render(screen, enemy):
+    screen.blit(enemy.SPR[int(enemy.current_frame)], (enemy.x, enemy.y))
+
+
+def bullet_render(screen, bullet):
+    screen.blit(bullet.SPR[int(bullet.current_frame)], (bullet.x, bullet.y))
+
+
 def player_render(screen, player):
     screen.blit(PLAYER_SPRITES[int(player.current_frame)], (player.x, player.y))
 
 
 def hud_render(screen):
     screen.blit(HUD_SPRITES[11], (0, 0))
-
-
-def bullet_render(screen, _bullet):
-    screen.blit(_bullet.SPR[int(_bullet.current_frame)], (_bullet.x, _bullet.y))
-
-
-def place(screen, enemy):
-    screen.blit(enemy.SPR[int(enemy.current_frame)], (enemy.x, enemy.y))
 
 
 def text_render(screen, text, x, y):
