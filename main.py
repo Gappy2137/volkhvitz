@@ -11,7 +11,7 @@ if __name__ == '__main__':
 
     player = Player()
 
-    enemy = FairyBlue()
+    fairy = create_enemy(150, 250, "red_fairy")
 
     screen.fill((0, 0, 0))
 
@@ -83,9 +83,9 @@ if __name__ == '__main__':
 
             screen.fill((255, 255, 255))
 
-            place(screen, enemy)
+            place(screen, fairy)
 
-            enemy.set_frame()
+            fairy.set_frame()
 
             player.shoot_bullet()
 

@@ -88,11 +88,6 @@ class Player:
                 self.current_frame = 0
 
     def shoot_bullet(self):
-        if self.can_shoot is False:
-            self.bullet_clock += 1
-            if self.bullet_clock > self.BULLET_SHOOTING_FREQ:
-                self.bullet_clock = 0
-                self.can_shoot = True
 
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
@@ -103,6 +98,16 @@ class Player:
                 bul.type = 0
                 bullet_list.append(bul)
                 self.can_shoot = False
+        else:
+            self.can_shoot = True
+
+        if self.can_shoot is False:
+            self.bullet_clock += 1
+            if self.bullet_clock > self.BULLET_SHOOTING_FREQ:
+                self.bullet_clock = 0
+
+        if self.bullet_clock == 0:
+            self.can_shoot = True
 
 
 class Enemy:
