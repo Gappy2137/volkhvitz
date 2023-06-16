@@ -20,6 +20,8 @@ if __name__ == '__main__':
 
     screen.fill((0, 0, 0))
 
+    bg = Background()
+
     while True:
         for event in pygame.event.get():
             # Quit event.
@@ -86,7 +88,11 @@ if __name__ == '__main__':
 
             player.set_frame()
 
-            screen.fill((255, 100, 255))
+            #screen.fill((255, 100, 255))
+            bg.set_frame(0)
+            bg.make_scroll()
+            bg_render(screen, bg)
+
 
             for bullet in bullet_list:
                 #pygame.draw.rect(screen, (0, 255, 255), (bullet.x + bullet.hitbox_x, bullet.y + bullet.HITBOX_Y, bullet.width, bullet.HEIGHT))

@@ -257,7 +257,6 @@ class Effect:
             self.current_frame = 5
             self.curr_anim_no_of_frs = 3 + self.current_frame
 
-
     def set_frame(self):
         self.current_frame += self.anim_spd
         if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
@@ -287,3 +286,18 @@ class Powerup:
         self.y = 0
         self.hsp = 0
         self.vsp = 0
+
+
+class Background:
+    def __init__(self):
+        self.SPR = BG_SPRITES
+        self.SPD = 0.5
+        self.WIDTH = 9696
+        self.frame = 0
+        self.y = -self.WIDTH + 480
+
+    def make_scroll(self):
+        self.y += self.SPD
+
+    def set_frame(self, frame):
+        self.frame = frame

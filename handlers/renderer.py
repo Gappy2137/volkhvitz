@@ -1,6 +1,10 @@
 from imports import *
 
 
+def bg_render(screen, bg):
+    screen.blit(bg.SPR[int(bg.frame)], (16, bg.y))
+
+
 def fx_render(screen, fx):
     screen.blit(fx.SPR[int(fx.current_frame)], (fx.x, fx.y))
 
