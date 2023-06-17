@@ -13,14 +13,10 @@ if __name__ == '__main__':
 
     player = Player()
 
-    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 0)
-    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 1)
-    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 2)
-    #create_enemy(spawn_x, spawn_y, FairyBlue(), enemy_path["group_2"], 0)
-
-    create_enemy(100, 100, FairyRed(), enemy_path["group_none"], 0)
-    create_enemy(100, 103, FairyRed(), enemy_path["group_none"], 0)
-    create_enemy(116, 100, FairyRed(), enemy_path["group_none"], 0)
+    create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 0)
+    create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 1)
+    create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 2)
+    create_enemy(spawn_x, spawn_y, FairyBlue(), enemy_path["group_2"], 0)
 
     screen.fill((0, 0, 0))
 
@@ -119,13 +115,15 @@ if __name__ == '__main__':
                 if bullet.is_hazard:
                     if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
                                  player.x + player.HITBOX_X, player.y + player.HITBOX_Y, player.HITBOX_SIZE, player.HITBOX_SIZE):
-                        bullet_list.remove(bullet)
+                        #bullet_list.remove(bullet)
+                        bullet_remove_list.append(bullet)
                         player.hit()
                 for enemy in enemy_list:
                     if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
                                  enemy.x, enemy.y, enemy.WIDTH, enemy.WIDTH):
                         if not bullet.is_hazard:
-                            bullet_list.remove(bullet)
+                            # bullet_list.remove(bullet)
+                            bullet_remove_list.append(bullet)
                             #enemy_list.remove(enemy)
                             enemy.health -= bullet.damage
                             create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
@@ -136,6 +134,10 @@ if __name__ == '__main__':
                                     create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
                                               random.uniform(enemy.y + enemy.HEIGHT / 2, enemy.y + enemy.HEIGHT),
                                               random.uniform(1, 3), random.uniform(2, 4), random.uniform(0, 359), 1, 0, 0.15)
+
+            for bullet in bullet_remove_list:
+                if bullet in bullet_list:
+                    bullet_list.remove(bullet)
 
             player.shoot_bullet()
 
