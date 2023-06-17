@@ -170,7 +170,7 @@ class Enemy:
         self.score_on_kill = 100
         self.waypoints = 0
         self.waypoint_index = 0
-        self.offset = 0
+        self.following = 0
 
     def set_frame(self):
         self.current_frame += self.ANIM_SPD
@@ -180,9 +180,12 @@ class Enemy:
     def make_move(self):
         if self.waypoints[0] == 2137:
             return
-        target_x, target_y = self.waypoints[self.waypoint_index]
+        if not isinstance(self.following, Enemy):
+            target_x, target_y = self.waypoints[self.waypoint_index]
+        else:
+            target_x, target_y = self.following.x, self.following.y
         dx = target_x - self.x
-        dy = target_y - self.y - self.offset * 32
+        dy = target_y - self.y
         distance = (dx ** 2 + dy ** 2) ** 0.5
 
         if distance < self.SPD:
@@ -190,9 +193,12 @@ class Enemy:
             if self.waypoint_index >= len(self.waypoints):
                 self.destroy()
             else:
-                target_x, target_y = self.waypoints[self.waypoint_index]
+                if not isinstance(self.following, Enemy):
+                    target_x, target_y = self.waypoints[self.waypoint_index]
+                else:
+                    target_x, target_y = self.following.x, self.following.y
                 dx = target_x - self.x
-                dy = target_y - self.y - self.offset * 32
+                dy = target_y - self.y
 
         angle = math.atan2(dy, dx)
         self.x += self.SPD * math.cos(angle)
