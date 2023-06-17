@@ -191,7 +191,7 @@ class Enemy:
         if distance < self.SPD:
             self.waypoint_index += 1
             if self.waypoint_index >= len(self.waypoints):
-                self.destroy()
+                self.destroy(False)
             else:
                 if not isinstance(self.following, Enemy):
                     target_x, target_y = self.waypoints[self.waypoint_index]
@@ -217,11 +217,12 @@ class Enemy:
 
     def check_vitals(self):
         if self.health <= 0:
-            self.destroy()
+            self.destroy(True)
 
-    def destroy(self):
-        psl[1] += self.score_on_kill
-        create_powerup(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2)
+    def destroy(self, give_points):
+        if give_points:
+            psl[1] += self.score_on_kill
+            create_powerup(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2)
         enemy_list.remove(self)
         del self
 

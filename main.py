@@ -13,11 +13,14 @@ if __name__ == '__main__':
 
     player = Player()
 
-    en = [None] * 3
+    en = [None] * 6
 
     en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"], 0)
-    en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"], en[0])
-    en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"], en[1])
+    en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"], 0)
+    en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"], 0)
+    en[3] = create_enemy(pos_x[1], en[2].y - 32, FairyRed(), enemy_path["group_1"], 0)
+    en[4] = create_enemy(pos_x[1], en[3].y - 32, FairyRed(), enemy_path["group_1"], 0)
+    en[5] = create_enemy(pos_x[1], en[4].y - 32, FairyRed(), enemy_path["group_1"], 0)
     #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_1"], 2)
     #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_2"], 0)
     #create_enemy(spawn_x, spawn_y - 32, FairyRed(), enemy_path["group_2"], 1)
@@ -30,9 +33,6 @@ if __name__ == '__main__':
     bg = Background()
     bg2 = Background()
     bg2.y = -bg2.HEIGHT * 2 + 480
-
-    lives_x_real = []
-    lives_y_real = []
 
     while True:
         for event in pygame.event.get():
@@ -199,7 +199,6 @@ if __name__ == '__main__':
 
             text_render(screen, str(psl[0]), POWER_X, POWER_Y)
             text_render(screen, f"{psl[1]:04}", SCORE_X, SCORE_Y)
-            #text_render(screen, str(abs(psl[2])), LIVES_X, LIVES_Y)
 
             for i in range(psl[2]):
                 screen.blit(HUD_SPRITES[10], (LIVES_X + (i % 5) * 32, LIVES_Y + (i // 5) * 32))

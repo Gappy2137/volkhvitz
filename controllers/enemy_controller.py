@@ -3,11 +3,13 @@ from imports import *
 enemy_list = []
 
 spawn_x = 192
-spawn_y = -64 + 80
-top = -32 + 80
-middle = 224 + 80
+spawn_y = -64
+top = -32
+middle = 224
 bottom_uwu = 544
-pos_x = [24, 24 + 32, 24 + (32 * 2), 24 + (32 * 3), 24 + (32 * 4), 24 + (32 * 5), 24 + (32 * 6), 24 + (32 * 7), 24 + (32 * 8), 24 + (32 * 9), 24 + (32 * 10)]
+pos_x = [24]
+for i in range(1, 10):
+    pos_x.append(24 + (32 * i))
 mid_x = 168
 fly_left = -64
 fly_right = BARS_RIGHT + 64
