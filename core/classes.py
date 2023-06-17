@@ -29,6 +29,7 @@ class Player:
         self.hsp = 0
         self.vsp = 0
         self.bullet_clock = 0
+        self.bullet_type = 0
         self.show_hitbox = False
         self.invis = False
         self.invis_duration = 120
@@ -98,9 +99,15 @@ class Player:
                 self.current_frame = 0
 
     def shoot_bullet(self):
+
+        if psl[0] in range(0, 15):
+            self.bullet_type = 0
+        elif psl[0] in range(16, 32):
+            self.bullet_type = 2
+
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, 0)
+                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type)
                 self.can_shoot = False
         else:
             self.can_shoot = True
@@ -132,13 +139,11 @@ class Player:
                 self.invis = False
 
 
-
-
 class Enemy:
     def __init__(self):
         # Const.
         self.SPR = []
-        self.SPD = 2.5
+        self.SPD = 1
         self.WIDTH = 32
         self.HEIGHT = 32
         self.HITBOX_X = 13
@@ -163,11 +168,35 @@ class Enemy:
         self.bullet_clock = 0
         self.health = 1
         self.score_on_kill = 100
+        self.waypoints = 0
+        self.waypoint_index = 0
+        self.offset = 0
 
     def set_frame(self):
         self.current_frame += self.ANIM_SPD
         if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
             self.current_frame = 0
+
+    def make_move(self):
+        if self.waypoints[0] == 2137:
+            return
+        target_x, target_y = self.waypoints[self.waypoint_index]
+        dx = target_x - self.x
+        dy = target_y - self.y - self.offset * 32
+        distance = (dx ** 2 + dy ** 2) ** 0.5
+
+        if distance < self.SPD:
+            self.waypoint_index += 1
+            if self.waypoint_index >= len(self.waypoints):
+                self.destroy()
+            else:
+                target_x, target_y = self.waypoints[self.waypoint_index]
+                dx = target_x - self.x
+                dy = target_y - self.y - self.offset * 32
+
+        angle = math.atan2(dy, dx)
+        self.x += self.SPD * math.cos(angle)
+        self.y += self.SPD * math.sin(angle)
 
     def shoot_bullet(self, to_x, to_y, bullet_type):
         if self.can_shoot is True:
@@ -247,6 +276,8 @@ class Bullet:
             self.set_vars(3, 0, 7, 11, 8)
         elif self.bullet_type == 1:
             self.set_vars(1, 1, 5, 5, 4)
+        elif self.bullet_type == 2:
+            self.set_vars(0, 0, 13, 11, 8)
 
     def set_frame(self):
         if self.is_hazard == 0:
@@ -348,8 +379,8 @@ class Powerup:
     def make_move(self):
         self.hsp -= self.friction * numpy.sign(self.hsp)
         self.vsp += self.friction
-        if self.vsp > 2:
-            self.vsp = 2
+        if self.vsp > 1.8:
+            self.vsp = 1.8
         if abs(self.hsp) < 0.1:
             self.hsp = 0
         self.x += self.hsp

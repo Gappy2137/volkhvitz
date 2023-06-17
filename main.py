@@ -13,10 +13,14 @@ if __name__ == '__main__':
 
     player = Player()
 
-    create_enemy(100, 250, FairyRed())
-    create_enemy(100, 200, FairyRed())
-    create_enemy(100, 100, FairyRed())
-    create_enemy(250, 250, FairyBlue())
+    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 0)
+    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 1)
+    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_1"], 2)
+    #create_enemy(spawn_x, spawn_y, FairyBlue(), enemy_path["group_2"], 0)
+
+    create_enemy(100, 100, FairyRed(), enemy_path["group_none"], 0)
+    create_enemy(100, 103, FairyRed(), enemy_path["group_none"], 0)
+    create_enemy(116, 100, FairyRed(), enemy_path["group_none"], 0)
 
     screen.fill((0, 0, 0))
 
@@ -138,6 +142,7 @@ if __name__ == '__main__':
             for enemy in enemy_list:
                 enemy.set_frame()
                 enemy.check_vitals()
+                enemy.make_move()
                 enemy.shoot_bullet(player.x + player.WIDTH/2, player.y + player.HEIGHT/2, 1)
 
             for enemy in enemy_list:

@@ -2,18 +2,12 @@
 from imports import *
 
 
-"""
-enemy_dict = {
-    "red_fairy": [FairyRed(), enemy_list],
-    "blue_fairy": [FairyBlue(), enemy_list]
-}
-"""
-
-
-def create_enemy(x, y, enemy_type):
+def create_enemy(x, y, enemy_type, waypoints, offset):
     enemy = enemy_type
     enemy.x, enemy.y = x, y
     enemy.current_frame = random.randint(0, 3)
+    enemy.waypoints = waypoints
+    enemy.offset = offset
     enemy_list.append(enemy)
     return enemy
 
