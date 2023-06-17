@@ -153,6 +153,7 @@ class Enemy:
         self.BULLET_HITBOX_Y = 0
         self.ANIM_SPD = 0.15
         # Var.
+        self.start_shooting_delay = random.randint(0, 255)
         self.bullet_shooting_freq = 20
         self.current_frame = 0
         self.curr_anim_no_of_frs = 3
@@ -205,15 +206,20 @@ class Enemy:
         self.y += self.SPD * math.sin(angle)
 
     def shoot_bullet(self, to_x, to_y, bullet_type):
-        if self.can_shoot is True:
-            create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type)
-            self.can_shoot = False
 
-        if self.can_shoot is False:
-            self.bullet_clock += 1
-            if self.bullet_clock > self.bullet_shooting_freq:
-                self.bullet_clock = 0
-                self.can_shoot = True
+        self.start_shooting_delay -= 1
+        if self.start_shooting_delay <= 0:
+            self.start_shooting_delay = 0
+
+            if self.can_shoot is True:
+                create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type)
+                self.can_shoot = False
+
+            if self.can_shoot is False:
+                self.bullet_clock += 1
+                if self.bullet_clock > self.bullet_shooting_freq:
+                    self.bullet_clock = 0
+                    self.can_shoot = True
 
     def check_vitals(self):
         if self.health <= 0:
@@ -236,7 +242,7 @@ class FairyRed(Enemy):
         self.HITBOX_X = 10
         self.HITBOX_Y = 11
         self.HITBOX_SIZE = 12
-        self.bullet_shooting_freq = 40
+        self.bullet_shooting_freq = random.randint(30, 50)
         self.bullet_type = 0
 
 
