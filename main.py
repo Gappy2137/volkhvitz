@@ -24,6 +24,9 @@ if __name__ == '__main__':
     bg2 = Background()
     bg2.y = -bg2.HEIGHT * 2 + 480
 
+    lives_x_real = []
+    lives_y_real = []
+
     while True:
         for event in pygame.event.get():
             # Quit event.
@@ -90,6 +93,8 @@ if __name__ == '__main__':
 
             player.set_frame()
 
+            player.invis_logic()
+
             #screen.fill((255, 100, 255))
             bg.set_frame(0)
             bg.make_scroll(True)
@@ -143,6 +148,16 @@ if __name__ == '__main__':
                 fx.make_move()
                 fx_render(screen, fx)
 
+            for powerup in powerup_list:
+                powerup.make_move()
+                powerup.destroy_cond()
+                if collision(player.x, player.y, player.WIDTH, player.HEIGHT,
+                             powerup.x, powerup.y, powerup.SIZE, powerup.SIZE):
+                    powerup.collect()
+
+            for powerup in powerup_list:
+                powerup_render(screen, powerup)
+
             player_render(screen, player)
 
             if player.show_hitbox:
@@ -164,14 +179,16 @@ if __name__ == '__main__':
             if psl[1] > 9999999999:
                 psl[1] = 9999999999
 
-            if psl[2] < 0:
-                psl[2] = 0
+            if psl[2] <= 0:
+                pygame.quit()
+                sys.exit()
 
             text_render(screen, str(psl[0]), POWER_X, POWER_Y)
             text_render(screen, f"{psl[1]:04}", SCORE_X, SCORE_Y)
-            text_render(screen, str(abs(psl[2])), LIVES_X, LIVES_Y)
+            #text_render(screen, str(abs(psl[2])), LIVES_X, LIVES_Y)
 
-
+            for i in range(psl[2]):
+                screen.blit(HUD_SPRITES[10], (LIVES_X + (i % 5) * 32, LIVES_Y + (i // 5) * 32))
 
         pygame.display.flip()
 

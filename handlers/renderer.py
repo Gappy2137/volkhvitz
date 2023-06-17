@@ -12,13 +12,18 @@ def fx_render(screen, fx):
 def enemy_render(screen, enemy):
     screen.blit(enemy.SPR[int(enemy.current_frame)], (enemy.x, enemy.y))
 
+def powerup_render(screen, powerup):
+    screen.blit(FX_SPRITES[9], (powerup.x, powerup.y))
+
 
 def bullet_render(screen, bullet):
     screen.blit(bullet.SPR[int(bullet.current_frame)], (bullet.x, bullet.y))
 
 
+
 def player_render(screen, player):
-    screen.blit(PLAYER_SPRITES[int(player.current_frame)], (player.x, player.y))
+    if player.visible:
+        screen.blit(PLAYER_SPRITES[int(player.current_frame)], (player.x, player.y))
 
 
 def player_hitbox_render(screen, player):

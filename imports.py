@@ -4,6 +4,7 @@ import sys
 import os
 import math
 import random
+import numpy
 
 from core.varconst import *
 

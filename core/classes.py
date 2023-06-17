@@ -1,4 +1,6 @@
 """Classes."""
+import random
+
 from imports import *
 
 
@@ -29,8 +31,9 @@ class Player:
         self.bullet_clock = 0
         self.show_hitbox = False
         self.invis = False
-        self.invis_duration = 20
+        self.invis_duration = 120
         self.invis_clock = self.invis_duration
+        self.visible = True
 
     def get_keys(self):
         self.keys = pygame.key.get_pressed()
@@ -110,9 +113,25 @@ class Player:
         if self.bullet_clock == 0:
             self.can_shoot = True
 
-    @staticmethod
-    def hit():
-        psl[2] -= 1
+    def hit(self):
+        if not self.invis:
+            psl[2] -= 1
+            self.invis = True
+
+    def invis_logic(self):
+        if self.invis:
+            self.invis_clock -= 1
+
+            if self.invis_clock % 2 == 0:
+                self.visible = True
+            else:
+                self.visible = False
+
+            if self.invis_clock == 0:
+                self.invis_clock = self.invis_duration
+                self.invis = False
+
+
 
 
 class Enemy:
@@ -167,6 +186,7 @@ class Enemy:
 
     def destroy(self):
         psl[1] += self.score_on_kill
+        create_powerup(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2)
         enemy_list.remove(self)
         del self
 
@@ -312,16 +332,46 @@ class Powerup:
     def __init__(self):
         # Const.
         self.SPD = 2
-        self.WIDTH = 12
-        self.HEIGHT = 12
-        self.HITBOX_X = 0
-        self.HITBOX_Y = 0
-        self.HITBOX_SIZE = 12
+        self.SIZE = 12
         # Var.
         self.x = 0
         self.y = 0
         self.hsp = 0
         self.vsp = 0
+        self.friction = 0
+
+    def set_vars(self):
+        self.friction = random.uniform(0.01, 0.1)
+        self.hsp = random.uniform(-2, 2)
+        self.vsp = random.uniform(-2, -4)
+
+    def make_move(self):
+        self.hsp -= self.friction * numpy.sign(self.hsp)
+        self.vsp += self.friction
+        if self.vsp > 2:
+            self.vsp = 2
+        if abs(self.hsp) < 0.1:
+            self.hsp = 0
+        self.x += self.hsp
+        self.y += self.vsp
+
+    def collect(self):
+        psl[0] += 1
+        powerup_list.remove(self)
+        del self
+
+    def destroy_cond(self):
+        if self.y > RESOLUTION[1] + 16:
+            powerup_list.remove(self)
+            del self
+
+
+def create_powerup(x, y):
+    powerup = Powerup()
+    powerup.x, powerup.y = x - powerup.SIZE / 2, y - powerup.SIZE / 2
+    powerup.set_vars()
+    powerup_list.append(powerup)
+    return powerup
 
 
 class Background:
@@ -334,7 +384,6 @@ class Background:
 
     def make_scroll(self, bg1):
         self.y += self.SPD
-
 
     def set_frame(self, frame):
         self.frame = frame
