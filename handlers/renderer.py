@@ -21,6 +21,10 @@ def player_render(screen, player):
     screen.blit(PLAYER_SPRITES[int(player.current_frame)], (player.x, player.y))
 
 
+def player_hitbox_render(screen, player):
+    screen.blit(PLAYER_SPRITES[4], (player.x, player.y))
+
+
 def hud_render(screen):
     screen.blit(HUD_SPRITES[11], (0, 0))
 

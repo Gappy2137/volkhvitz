@@ -1,6 +1,5 @@
 from imports import *
 
-power = 0
 
-if power > 128:
-    power = 128
+# 0 - power, 1 - score, 2 - lives
+psl = [0, 0, 5]

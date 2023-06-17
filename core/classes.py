@@ -10,7 +10,7 @@ class Player:
         self.HEIGHT = 48
         self.HITBOX_X = 13
         self.HITBOX_Y = 25
-        self.HITBOX_SIZE = 8
+        self.HITBOX_SIZE = 6
         self.ANIM_SPD = 0.15
         self.DIAG_MULTIPLIER = 0.75
         self.FOCUS_MULTIPLIER = 0.5
@@ -27,6 +27,10 @@ class Player:
         self.hsp = 0
         self.vsp = 0
         self.bullet_clock = 0
+        self.show_hitbox = False
+        self.invis = False
+        self.invis_duration = 20
+        self.invis_clock = self.invis_duration
 
     def get_keys(self):
         self.keys = pygame.key.get_pressed()
@@ -70,8 +74,11 @@ class Player:
                 self.vsp *= self.DIAG_MULTIPLIER
 
             if self.keys[pygame.K_LSHIFT]:
+                self.show_hitbox = True
                 self.hsp *= self.FOCUS_MULTIPLIER
                 self.vsp *= self.FOCUS_MULTIPLIER
+            else:
+                self.show_hitbox = False
 
     def make_move(self):
         self.x += self.hsp
@@ -90,7 +97,7 @@ class Player:
     def shoot_bullet(self):
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y, False)
+                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, 0)
                 self.can_shoot = False
         else:
             self.can_shoot = True
@@ -102,6 +109,10 @@ class Player:
 
         if self.bullet_clock == 0:
             self.can_shoot = True
+
+    @staticmethod
+    def hit():
+        psl[2] -= 1
 
 
 class Enemy:
@@ -117,14 +128,14 @@ class Enemy:
         self.BULLET_HITBOX_X = 0
         self.BULLET_HITBOX_Y = 0
         self.ANIM_SPD = 0.15
-        self.BULLET_SHOOTING_FREQ = 10
         # Var.
+        self.bullet_shooting_freq = 20
         self.current_frame = 0
         self.curr_anim_no_of_frs = 3
         self.can_move = True
         self.is_moving = False
         self.move_pattern = 0
-        self.bullet_type = 0
+        self.bullet_type = 1
         self.x = 180
         self.y = 170
         self.hsp = 0
@@ -132,33 +143,30 @@ class Enemy:
         self.can_shoot = True
         self.bullet_clock = 0
         self.health = 1
+        self.score_on_kill = 100
 
     def set_frame(self):
         self.current_frame += self.ANIM_SPD
         if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
             self.current_frame = 0
 
-    def shoot_bullet(self):
-        if self.keys[pygame.K_x]:
-            if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y, False)
-                self.can_shoot = False
-        else:
-            self.can_shoot = True
+    def shoot_bullet(self, to_x, to_y, bullet_type):
+        if self.can_shoot is True:
+            create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type)
+            self.can_shoot = False
 
         if self.can_shoot is False:
             self.bullet_clock += 1
-            if self.bullet_clock > self.BULLET_SHOOTING_FREQ:
+            if self.bullet_clock > self.bullet_shooting_freq:
                 self.bullet_clock = 0
-
-        if self.bullet_clock == 0:
-            self.can_shoot = True
+                self.can_shoot = True
 
     def check_vitals(self):
         if self.health <= 0:
             self.destroy()
 
     def destroy(self):
+        psl[1] += self.score_on_kill
         enemy_list.remove(self)
         del self
 
@@ -172,37 +180,57 @@ class FairyRed(Enemy):
         self.HITBOX_X = 10
         self.HITBOX_Y = 11
         self.HITBOX_SIZE = 12
+        self.bullet_shooting_freq = 40
+        self.bullet_type = 0
 
 
 class FairyBlue(FairyRed):
     def __init__(self):
         super().__init__()
         self.SPR = BLUE_FAIRY_SPRITES
-        self.health = 10
+        self.health = 5
+        self.bullet_type = 0
+        self.bullet_shooting_freq = 20
 
 
 class Bullet:
     def __init__(self):
         # Const.
         self.SPR = BULLETS_SPRITES
-        self.SPD = 8
-        self.HEIGHT = 11
-        self.HITBOX_Y = 0
         # Var.
+        self.spd = 8
+        self.hitbox_x = 3
+        self.hitbox_y = 0
+        self.width = 7
+        self.height = 11
         self.x = 0
         self.y = 0
         self.hsp = 0
         self.vsp = 0
         self.damage = 1
-        self.width = 7
-        self.hitbox_x = 3
         self.current_frame = 3
+        self.is_homing = False
+        self.angle = 0
         # False - player's bullet, True - deals damage to player
         self.is_hazard = False
+        self.bullet_type = 0
+
+    def set_vars(self, hitbox_x, hitbox_y, width, height, spd):
+        self.hitbox_x = hitbox_x
+        self.hitbox_y = hitbox_y
+        self.width = width
+        self.height = height
+        self.spd = spd
+
+    def check_type(self):
+        if self.bullet_type == 0:
+            self.set_vars(3, 0, 7, 11, 8)
+        elif self.bullet_type == 1:
+            self.set_vars(1, 1, 5, 5, 4)
 
     def set_frame(self):
         if self.is_hazard == 0:
-            if power > 16:
+            if psl[0] > 16:
                 self.current_frame = 4
             else:
                 self.current_frame = 3
@@ -210,8 +238,12 @@ class Bullet:
             self.current_frame = 0
 
     def make_move(self):
-        self.x += self.hsp
-        self.y += self.vsp
+        if self.is_homing:
+            self.x += self.spd * math.cos(self.angle)
+            self.y += self.spd * -math.sin(self.angle)
+        else:
+            self.x += self.hsp
+            self.y += self.vsp
 
     def destroy_cond(self):
         if out_of_bounds(self):
@@ -220,11 +252,15 @@ class Bullet:
 
 
 # bruh nwm co ja tu zrobilemxddd
-def create_bullet(x, y, is_hazard):
+def create_bullet(x, y, is_hazard, is_homing, move_to_x, move_to_y, bullet_type):
     bullet = Bullet()
     bullet.x, bullet.y = x - bullet.width / 2, y
     bullet.is_hazard = is_hazard
-    bullet.vsp = -bullet.SPD
+    bullet.vsp = -bullet.spd
+    bullet.is_homing = is_homing
+    bullet.angle = calc_angle(bullet.x, bullet.y, move_to_x, move_to_y)
+    bullet.bullet_type = bullet_type
+    bullet.check_type()
     bullet_list.append(bullet)
     return bullet
 
@@ -292,12 +328,13 @@ class Background:
     def __init__(self):
         self.SPR = BG_SPRITES
         self.SPD = 0.5
-        self.WIDTH = 9696
+        self.HEIGHT = 9696
         self.frame = 0
-        self.y = -self.WIDTH + 480
+        self.y = -self.HEIGHT + 480
 
-    def make_scroll(self):
+    def make_scroll(self, bg1):
         self.y += self.SPD
+
 
     def set_frame(self, frame):
         self.frame = frame

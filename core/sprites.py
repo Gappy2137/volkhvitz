@@ -49,6 +49,7 @@ HUD_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number
 PLAYER_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_0.png')),
                   pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_1.png')),
                   pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_left.png')),
-                  pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_right.png'))]
+                  pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_frame_right.png')),
+                  pygame.image.load(os.path.join(DIR + r'\spritesheet\player', 'player_hitbox.png'))]
 
 BG_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\bg', 'bg_0.png'))]

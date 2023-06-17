@@ -21,6 +21,8 @@ if __name__ == '__main__':
     screen.fill((0, 0, 0))
 
     bg = Background()
+    bg2 = Background()
+    bg2.y = -bg2.HEIGHT * 2 + 480
 
     while True:
         for event in pygame.event.get():
@@ -90,14 +92,28 @@ if __name__ == '__main__':
 
             #screen.fill((255, 100, 255))
             bg.set_frame(0)
-            bg.make_scroll()
+            bg.make_scroll(True)
+            bg2.set_frame(0)
+            bg2.make_scroll(False)
+
+            if bg.y >= RESOLUTION[1]:
+                bg.y = bg2.y - bg2.HEIGHT
+            if bg2.y >= RESOLUTION[1]:
+                bg2.y = bg.y - bg.HEIGHT
+
             bg_render(screen, bg)
+            bg_render(screen, bg2)
 
 
             for bullet in bullet_list:
-                #pygame.draw.rect(screen, (0, 255, 255), (bullet.x + bullet.hitbox_x, bullet.y + bullet.HITBOX_Y, bullet.width, bullet.HEIGHT))
+                #pygame.draw.rect(screen, (0, 255, 255), (bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_x, bullet.width, bullet.height))
+                if bullet.is_hazard:
+                    if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
+                                 player.x + player.HITBOX_X, player.y + player.HITBOX_Y, player.HITBOX_SIZE, player.HITBOX_SIZE):
+                        bullet_list.remove(bullet)
+                        player.hit()
                 for enemy in enemy_list:
-                    if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.HITBOX_Y, bullet.width, bullet.HEIGHT,
+                    if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
                                  enemy.x, enemy.y, enemy.WIDTH, enemy.WIDTH):
                         if not bullet.is_hazard:
                             bullet_list.remove(bullet)
@@ -114,17 +130,10 @@ if __name__ == '__main__':
 
             player.shoot_bullet()
 
-            for bullet in bullet_list:
-                bullet.set_frame()
-                bullet.make_move()
-                bullet.destroy_cond()
-
-            for bullet in bullet_list:
-                bullet_render(screen, bullet)
-
             for enemy in enemy_list:
                 enemy.set_frame()
                 enemy.check_vitals()
+                enemy.shoot_bullet(player.x + player.WIDTH/2, player.y + player.HEIGHT/2, 1)
 
             for enemy in enemy_list:
                 enemy_render(screen, enemy)
@@ -136,10 +145,33 @@ if __name__ == '__main__':
 
             player_render(screen, player)
 
+            if player.show_hitbox:
+                player_hitbox_render(screen, player)
+
+            for bullet in bullet_list:
+                bullet.set_frame()
+                bullet.make_move()
+                bullet.destroy_cond()
+
+            for bullet in bullet_list:
+                bullet_render(screen, bullet)
+
             hud_render(screen)
 
-            text_render(screen, str(power), POWER_X, POWER_Y)
-            #text_render(screen, str(len(fx_list)), POWER_X, POWER_Y + 80)
+            if psl[0] > 128:
+                psl[0] = 128
+
+            if psl[1] > 9999999999:
+                psl[1] = 9999999999
+
+            if psl[2] < 0:
+                psl[2] = 0
+
+            text_render(screen, str(psl[0]), POWER_X, POWER_Y)
+            text_render(screen, f"{psl[1]:04}", SCORE_X, SCORE_Y)
+            text_render(screen, str(abs(psl[2])), LIVES_X, LIVES_Y)
+
+
 
         pygame.display.flip()
 
