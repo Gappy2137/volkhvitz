@@ -13,20 +13,22 @@ if __name__ == '__main__':
 
     player = Player()
 
-    en = [None] * 6
+    #en = [None] * 6
 
-    en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"], 0)
-    en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"], 0)
-    en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"], 0)
-    en[3] = create_enemy(pos_x[1], en[2].y - 32, FairyRed(), enemy_path["group_1"], 0)
-    en[4] = create_enemy(pos_x[1], en[3].y - 32, FairyRed(), enemy_path["group_1"], 0)
-    en[5] = create_enemy(pos_x[1], en[4].y - 32, FairyRed(), enemy_path["group_1"], 0)
+    #en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"])
+    #en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"])
+    #en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"])
+    #en[3] = create_enemy(pos_x[1], en[2].y - 32, FairyRed(), enemy_path["group_1"])
+    #en[4] = create_enemy(pos_x[1], en[3].y - 32, FairyRed(), enemy_path["group_1"])
+    #en[5] = create_enemy(pos_x[1], en[4].y - 32, FairyRed(), enemy_path["group_1"])
     #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_1"], 2)
     #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_2"], 0)
     #create_enemy(spawn_x, spawn_y - 32, FairyRed(), enemy_path["group_2"], 1)
     #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_2"], 2)
 
     #create_enemy(spawn_x, spawn_y - 256, FairyBlue(), enemy_path["group_3"], 0)
+    create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 0, 0, (2, 2))
+    #create_enemy(64, 200, FairyBlue(), enemy_path["group_1"], 3, 0, (-1, -1))
 
     screen.fill((0, 0, 0))
 

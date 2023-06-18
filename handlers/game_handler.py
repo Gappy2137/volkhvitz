@@ -2,12 +2,15 @@
 from imports import *
 
 
-def create_enemy(x, y, enemy_type, waypoints, following):
+def create_enemy(x, y, enemy_type, waypoints, pattern, freq, change_pattern):
     enemy = enemy_type
     enemy.x, enemy.y = x, y
     enemy.current_frame = random.randint(0, 3)
     enemy.waypoints = waypoints
-    enemy.following = following
+    enemy.bullet_pattern = pattern
+    enemy.bullet_freq = freq
+    enemy.bullet_set_freq()
+    enemy.change_pattern = change_pattern
     enemy_list.append(enemy)
     return enemy
 

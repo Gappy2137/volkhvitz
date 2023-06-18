@@ -107,7 +107,7 @@ class Player:
 
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type)
+                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type, 0)
                 self.can_shoot = False
         else:
             self.can_shoot = True
@@ -152,6 +152,7 @@ class Enemy:
         self.BULLET_HITBOX_X = 0
         self.BULLET_HITBOX_Y = 0
         self.ANIM_SPD = 0.15
+        self.SHOOTING_CAPABLE = True
         # Var.
         self.start_shooting_delay = random.randint(0, 255)
         self.bullet_shooting_freq = 20
@@ -160,6 +161,20 @@ class Enemy:
         self.can_move = True
         self.is_moving = False
         self.move_pattern = 0
+        self.change_pattern = (-1, -1)
+
+        self.bullet_freq = 0
+        # 0 - shoot with bullet_shoot_freq interval
+        # 1 - shoot 2x faster
+        # 2 - shoot 2x slower
+        # 3 - shoot in random intervals (20, 80)
+
+        self.bullet_pattern = 0
+        # 0 - shoot 1 bullet
+        # 1 - shoot 3 bullets with 5-degree angle difference
+        # 2 - shoot in a circle (8 bullets)
+        # 3 - shoot in a circle (16 bullets)
+
         self.bullet_type = 1
         self.x = 180
         self.y = 170
@@ -179,6 +194,11 @@ class Enemy:
             self.current_frame = 0
 
     def make_move(self):
+
+        if not self.waypoints[self.change_pattern[0]] == -1:
+            if self.waypoint_index == self.change_pattern[1]:
+                self.bullet_set_pattern(self.change_pattern[0])
+
         if self.waypoints[0] == 2137:
             return
         if not isinstance(self.following, Enemy):
@@ -205,14 +225,43 @@ class Enemy:
         self.x += self.SPD * math.cos(angle)
         self.y += self.SPD * math.sin(angle)
 
+    def bullet_set_freq(self):
+        if self.bullet_freq == 0:
+            pass
+        elif self.bullet_freq == 1:
+            self.bullet_shooting_freq //= 2
+        elif self.bullet_freq == 2:
+            self.bullet_shooting_freq *= 2
+        elif self.bullet_freq == 3:
+            self.bullet_shooting_freq = random.randint(20, 80)
+
+    def bullet_set_pattern(self, bullet_pattern):
+        self.bullet_pattern = bullet_pattern
+
     def shoot_bullet(self, to_x, to_y, bullet_type):
+
+        if not self.SHOOTING_CAPABLE:
+            return
 
         self.start_shooting_delay -= 1
         if self.start_shooting_delay <= 0:
             self.start_shooting_delay = 0
 
             if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type)
+
+                if self.bullet_pattern == 0:
+                    create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type, 0)
+                elif self.bullet_pattern == 1:
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 2)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 12)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, -8)
+                elif self.bullet_pattern == 2:
+                    for i in range(8):
+                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 45) + 2)
+                elif self.bullet_pattern == 3:
+                    for i in range(16):
+                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 22.5) + 2)
+
                 self.can_shoot = False
 
             if self.can_shoot is False:
@@ -253,6 +302,35 @@ class FairyBlue(FairyRed):
         self.health = 5
         self.bullet_type = 0
         self.bullet_shooting_freq = 20
+
+
+class Wisp(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.SPR = WISP_SPRITES
+        self.WIDTH = 32
+        self.HEIGHT = 32
+        self.HITBOX_X = 11
+        self.HITBOX_Y = 17
+        self.HITBOX_SIZE = 9
+        self.SPD = 2
+        self.ANIM_SPD = 0.2
+        self.bullet_shooting_freq = random.randint(60, 120)
+        self.bullet_type = 0
+
+
+class Tick(Enemy):
+    def __init__(self):
+        super().__init__()
+        self.SPR = TICK_SPRITES
+        self.WIDTH = 32
+        self.HEIGHT = 32
+        self.HITBOX_X = 12
+        self.HITBOX_Y = 13
+        self.HITBOX_SIZE = 7
+        self.SHOOTING_CAPABLE = False
+        self.SPD = 3
+        self.ANIM_SPD = 1
 
 
 class Bullet:
@@ -316,13 +394,13 @@ class Bullet:
 
 
 # bruh nwm co ja tu zrobilemxddd
-def create_bullet(x, y, is_hazard, is_homing, move_to_x, move_to_y, bullet_type):
+def create_bullet(x, y, is_hazard, is_homing, move_to_x, move_to_y, bullet_type, angle_offset):
     bullet = Bullet()
     bullet.x, bullet.y = x - bullet.width / 2, y
     bullet.is_hazard = is_hazard
     bullet.vsp = -bullet.spd
     bullet.is_homing = is_homing
-    bullet.angle = calc_angle(bullet.x, bullet.y, move_to_x, move_to_y)
+    bullet.angle = calc_angle(bullet.x, bullet.y, move_to_x, move_to_y) + math.radians(angle_offset)
     bullet.bullet_type = bullet_type
     bullet.check_type()
     bullet_list.append(bullet)
