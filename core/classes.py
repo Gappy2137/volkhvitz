@@ -131,7 +131,7 @@ class Player:
 
     def hit(self):
         if not self.invis:
-            psl[0] -= math.floor(psl[0] / 3)
+            psl[0] -= math.floor(psl[0] / 6)
             psl[2] -= 1
             self.invis = True
 
@@ -153,7 +153,7 @@ class Enemy:
     def __init__(self):
         # Const.
         self.SPR = []
-        self.SPD = 1
+        self.SPD = 1.25
         self.WIDTH = 32
         self.HEIGHT = 32
         self.HITBOX_X = 13
@@ -214,29 +214,33 @@ class Enemy:
 
         if self.waypoints[0] == 2137:
             return
-        if not isinstance(self.following, Enemy):
-            target_x, target_y = self.waypoints[self.waypoint_index]
+        if self.waypoints[0] == 2138:
+            self.y += self.SPD
         else:
-            target_x, target_y = self.following.x, self.following.y
-        dx = target_x - self.x
-        dy = target_y - self.y
-        distance = (dx ** 2 + dy ** 2) ** 0.5
-
-        if distance < self.SPD:
-            self.waypoint_index += 1
-            if self.waypoint_index >= len(self.waypoints):
-                self.destroy(False)
+            if not isinstance(self.following, Enemy):
+                target_x, target_y = self.waypoints[self.waypoint_index]
             else:
-                if not isinstance(self.following, Enemy):
-                    target_x, target_y = self.waypoints[self.waypoint_index]
-                else:
-                    target_x, target_y = self.following.x, self.following.y
-                dx = target_x - self.x
-                dy = target_y - self.y
+                target_x, target_y = self.following.x, self.following.y
+            dx = target_x - self.x
+            dy = target_y - self.y
+            distance = (dx ** 2 + dy ** 2) ** 0.5
 
-        angle = math.atan2(dy, dx)
-        self.x += self.SPD * math.cos(angle)
-        self.y += self.SPD * math.sin(angle)
+            if distance < self.SPD:
+                self.waypoint_index += 1
+                if self.waypoint_index >= len(self.waypoints):
+                    self.destroy(False)
+                else:
+                    if not isinstance(self.following, Enemy):
+                        target_x, target_y = self.waypoints[self.waypoint_index]
+                    else:
+                        target_x, target_y = self.following.x, self.following.y
+                    dx = target_x - self.x
+                    dy = target_y - self.y
+
+            angle = math.atan2(dy, dx)
+            self.x += self.SPD * math.cos(angle)
+            self.y += self.SPD * math.sin(angle)
+
 
     def bullet_set_freq(self):
         if self.bullet_freq == 0:
@@ -308,7 +312,8 @@ class FairyRed(Enemy):
         self.HITBOX_X = 10
         self.HITBOX_Y = 11
         self.HITBOX_SIZE = 12
-        self.bullet_shooting_freq = random.randint(30, 50)
+        self.bullet_init_freq = 60
+        self.bullet_shooting_freq = random.randint(60, 90)
         self.bullet_type = 0
 
 
@@ -331,7 +336,7 @@ class Wisp(Enemy):
         self.HITBOX_Y = 17
         self.HITBOX_SIZE = 9
         self.health = 4
-        self.SPD = 2
+        self.SPD = 1.25
         self.ANIM_SPD = 0.2
         self.bullet_shooting_freq = random.randint(60, 120)
         self.bullet_type = 0
@@ -347,8 +352,8 @@ class Tick(Enemy):
         self.HITBOX_Y = 13
         self.HITBOX_SIZE = 7
         self.SHOOTING_CAPABLE = False
-        self.SPD = 3
-        self.ANIM_SPD = 1
+        self.SPD = 1.25
+        self.ANIM_SPD = 0.3
         self.health = 1
 
 
@@ -362,7 +367,7 @@ class Boss(Enemy):
         self.HITBOX_X = 16
         self.HITBOX_Y = 22
         self.HITBOX_SIZE = 11
-        self.SPD = 2
+        self.SPD = 1.25
         self.ANIM_SPD = 0.12
         self.health_max = 500
         self.health = self.health_max

@@ -25,8 +25,12 @@ if __name__ == '__main__':
 
     #create_enemy(spawn_x, spawn_y - 256, FairyBlue(), enemy_path["group_3"], 0)
     #create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 2, 0, (0, 1))
-    boss = create_enemy(spawn_x, spawn_y, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
+    boss = create_enemy(spawn_x, spawn_y - 9000, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
     #create_enemy(64, 200, FairyRed(), enemy_path["group_none"], 0, 0, (-1, -1))
+
+
+    enemy_place()
+
 
     screen.fill((0, 0, 0))
 
@@ -171,6 +175,8 @@ if __name__ == '__main__':
                 enemy.set_frame()
                 enemy.check_vitals()
                 enemy.make_move()
+                if enemy.y > BARS_BOTTOM + 64:
+                    enemy.destroy(False)
                 enemy.shoot_bullet(player.x + player.WIDTH/2, player.y + player.HEIGHT/2, 1)
 
             for enemy in enemy_list:

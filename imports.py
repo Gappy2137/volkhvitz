@@ -25,4 +25,6 @@ from core.classes import *
 from handlers.renderer import *
 from handlers.game_handler import *
 
+from enemy_placement import *
+
 from main import *

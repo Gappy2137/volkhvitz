@@ -15,7 +15,7 @@ ARROW_IMG = pygame.image.load(os.path.join(DIR + r'\spritesheet', 'arrow.png'))
 INFO_IMG = pygame.image.load(os.path.join(DIR + r'\spritesheet', 'info.png'))
 
 # Game constants.
-FPS = 60
+FPS = 120
 
 # HUD constants.
 TEXT_WIDTH = 16
