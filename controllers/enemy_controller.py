@@ -25,4 +25,11 @@ enemy_path = {
     "group_3": [(mid_x, top),
                 (mid_x, middle),
                 (mid_x, bottom_uwu)],
+    "boss_entry": [(mid_x, top),
+                   (mid_x, 68),
+                   (mid_x, 72)],
+    "boss_loop": [(mid_x, 72),
+                  (pos_x[1], 80),
+                  (mid_x, 72),
+                  (pos_x[9], 80)],
 }

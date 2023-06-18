@@ -13,22 +13,20 @@ if __name__ == '__main__':
 
     player = Player()
 
-    #en = [None] * 6
+    #en = [None] * 11
 
-    #en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"])
-    #en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"])
-    #en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"])
-    #en[3] = create_enemy(pos_x[1], en[2].y - 32, FairyRed(), enemy_path["group_1"])
-    #en[4] = create_enemy(pos_x[1], en[3].y - 32, FairyRed(), enemy_path["group_1"])
-    #en[5] = create_enemy(pos_x[1], en[4].y - 32, FairyRed(), enemy_path["group_1"])
+    #en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
+    #en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
+    #en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
     #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_1"], 2)
     #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_2"], 0)
     #create_enemy(spawn_x, spawn_y - 32, FairyRed(), enemy_path["group_2"], 1)
     #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_2"], 2)
 
     #create_enemy(spawn_x, spawn_y - 256, FairyBlue(), enemy_path["group_3"], 0)
-    create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 0, 0, (2, 2))
-    #create_enemy(64, 200, FairyBlue(), enemy_path["group_1"], 3, 0, (-1, -1))
+    #create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 2, 0, (0, 1))
+    boss = create_enemy(spawn_x, spawn_y, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
+    #create_enemy(64, 200, FairyRed(), enemy_path["group_none"], 0, 0, (-1, -1))
 
     screen.fill((0, 0, 0))
 
@@ -92,6 +90,12 @@ if __name__ == '__main__':
 
         if in_game is True:
 
+            keyss = pygame.key.get_pressed()
+            if keyss[pygame.K_a]:
+                psl[0] -= 1
+            if keyss[pygame.K_d]:
+                psl[0] += 1
+
             player.get_keys()
 
             player.set_speed()
@@ -148,7 +152,20 @@ if __name__ == '__main__':
                 if bullet in bullet_list:
                     bullet_list.remove(bullet)
 
-            player.shoot_bullet()
+            if enemy_list.__len__() > 0:
+                min_distance = float('inf')
+                xx = 0
+                yy = 0
+                for enemy in enemy_list:
+                    dist = calc_distance(player.x, player.y, enemy.x, enemy.y)
+                    if dist < min_distance:
+                        min_distance = dist
+                        xx = enemy.x
+                        yy = enemy.y
+
+                player.shoot_bullet(xx, yy)
+            else:
+                player.shoot_bullet(player.x + player.WIDTH / 2, 0)
 
             for enemy in enemy_list:
                 enemy.set_frame()
@@ -204,6 +221,12 @@ if __name__ == '__main__':
 
             for i in range(psl[2]):
                 screen.blit(HUD_SPRITES[10], (LIVES_X + (i % 5) * 32, LIVES_Y + (i // 5) * 32))
+
+            if boss.move_pattern > 0:
+                health_percentage = boss.health / boss.health_max
+                health_bar_width = int(health_percentage * 368 - 8)
+
+                pygame.draw.rect(screen, (255, 0, 0), (16 + 8, 2, health_bar_width - 8, 14))
 
         pygame.display.flip()
 

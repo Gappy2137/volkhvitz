@@ -40,6 +40,18 @@ TICK_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\tick', 'tick
                 pygame.image.load(os.path.join(DIR + r'\spritesheet\tick', 'tick_frame_2.png')),
                 pygame.image.load(os.path.join(DIR + r'\spritesheet\tick', 'tick_frame_3.png'))]
 
+BOSS_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_frame_0.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_frame_1.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_frame_2.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_frame_3.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_attack_frame_0.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_attack_frame_1.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_attack_frame_2.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_attack_frame_3.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_scythe_frame_0.png')),
+                pygame.image.load(os.path.join(DIR + r'\spritesheet\boss_1', 'boss_scythe_frame_1.png'))
+                ]
+
 HUD_SPRITES = [pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_0.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_1.png')),
                pygame.image.load(os.path.join(DIR + r'\spritesheet\hud', 'number_2.png')),

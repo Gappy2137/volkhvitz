@@ -98,16 +98,25 @@ class Player:
             if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
                 self.current_frame = 0
 
-    def shoot_bullet(self):
+    def shoot_bullet(self, to_x, to_y):
 
-        if psl[0] in range(0, 15):
+        if psl[0] in range(0, 31):
             self.bullet_type = 0
-        elif psl[0] in range(16, 32):
+        elif psl[0] in range(32, 79):
             self.bullet_type = 2
+        elif psl[0] in range(80, 127):
+            self.bullet_type = 3
+        elif psl[0] in range(128, 164):
+            self.bullet_type = 4
 
         if self.keys[pygame.K_z]:
             if self.can_shoot is True:
-                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type, 0)
+                create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type, 0, False)
+                if self.bullet_type == 3:
+                    create_bullet(self.x + self.WIDTH / 2, self.y, False, True, to_x, to_y, self.bullet_type, 0, True)
+                if self.bullet_type == 4:
+                    create_bullet(self.x - 2, self.y + 12, False, True, to_x, to_y, self.bullet_type, 0, True)
+                    create_bullet(self.x + self.WIDTH, self.y + 12, False, True, to_x, to_y, self.bullet_type, 0, True)
                 self.can_shoot = False
         else:
             self.can_shoot = True
@@ -122,6 +131,7 @@ class Player:
 
     def hit(self):
         if not self.invis:
+            psl[0] -= math.floor(psl[0] / 3)
             psl[2] -= 1
             self.invis = True
 
@@ -155,7 +165,8 @@ class Enemy:
         self.SHOOTING_CAPABLE = True
         # Var.
         self.start_shooting_delay = random.randint(0, 255)
-        self.bullet_shooting_freq = 20
+        self.bullet_init_freq = 20
+        self.bullet_shooting_freq = self.bullet_init_freq
         self.current_frame = 0
         self.curr_anim_no_of_frs = 3
         self.can_move = True
@@ -168,6 +179,8 @@ class Enemy:
         # 1 - shoot 2x faster
         # 2 - shoot 2x slower
         # 3 - shoot in random intervals (20, 80)
+        # 4 - shoot 3x faster
+        # 5 - shoot 4x faster
 
         self.bullet_pattern = 0
         # 0 - shoot 1 bullet
@@ -182,7 +195,7 @@ class Enemy:
         self.vsp = 0
         self.can_shoot = True
         self.bullet_clock = 0
-        self.health = 1
+        self.health = 2
         self.score_on_kill = 100
         self.waypoints = 0
         self.waypoint_index = 0
@@ -227,13 +240,17 @@ class Enemy:
 
     def bullet_set_freq(self):
         if self.bullet_freq == 0:
-            pass
+            self.bullet_shooting_freq = self.bullet_init_freq
         elif self.bullet_freq == 1:
-            self.bullet_shooting_freq //= 2
+            self.bullet_shooting_freq = self.bullet_init_freq // 2
         elif self.bullet_freq == 2:
-            self.bullet_shooting_freq *= 2
+            self.bullet_shooting_freq = self.bullet_init_freq * 2
         elif self.bullet_freq == 3:
             self.bullet_shooting_freq = random.randint(20, 80)
+        elif self.bullet_freq == 4:
+            self.bullet_shooting_freq = self.bullet_init_freq // 3
+        elif self.bullet_freq == 5:
+            self.bullet_shooting_freq = self.bullet_init_freq // 4
 
     def bullet_set_pattern(self, bullet_pattern):
         self.bullet_pattern = bullet_pattern
@@ -250,17 +267,17 @@ class Enemy:
             if self.can_shoot is True:
 
                 if self.bullet_pattern == 0:
-                    create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type, 0)
+                    create_bullet(self.x + self.WIDTH/2, self.y + self.HEIGHT/2, True, True, to_x, to_y, bullet_type, 0, False)
                 elif self.bullet_pattern == 1:
-                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 2)
-                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 12)
-                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, -8)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 0, False)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, 10, False)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, -10, False)
                 elif self.bullet_pattern == 2:
                     for i in range(8):
-                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 45) + 2)
+                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 45), False)
                 elif self.bullet_pattern == 3:
                     for i in range(16):
-                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 22.5) + 2)
+                        create_bullet(self.x + self.WIDTH / 2, self.y + self.HEIGHT / 2, True, True, to_x, to_y, bullet_type, (i * 22.5), False)
 
                 self.can_shoot = False
 
@@ -299,7 +316,7 @@ class FairyBlue(FairyRed):
     def __init__(self):
         super().__init__()
         self.SPR = BLUE_FAIRY_SPRITES
-        self.health = 5
+        self.health = 8
         self.bullet_type = 0
         self.bullet_shooting_freq = 20
 
@@ -313,6 +330,7 @@ class Wisp(Enemy):
         self.HITBOX_X = 11
         self.HITBOX_Y = 17
         self.HITBOX_SIZE = 9
+        self.health = 4
         self.SPD = 2
         self.ANIM_SPD = 0.2
         self.bullet_shooting_freq = random.randint(60, 120)
@@ -331,6 +349,79 @@ class Tick(Enemy):
         self.SHOOTING_CAPABLE = False
         self.SPD = 3
         self.ANIM_SPD = 1
+        self.health = 1
+
+
+class Boss(Enemy):
+
+    def __init__(self):
+        super().__init__()
+        self.SPR = BOSS_SPRITES
+        self.WIDTH = 48
+        self.HEIGHT = 64
+        self.HITBOX_X = 16
+        self.HITBOX_Y = 22
+        self.HITBOX_SIZE = 11
+        self.SPD = 2
+        self.ANIM_SPD = 0.12
+        self.health_max = 500
+        self.health = self.health_max
+        # 0 - moving, 1 - attack
+        self.state = 0
+        # 0 - move to place, 1 - fly left and right, 2 - fly in middle
+        self.move_pattern = 0
+        self.ready = False
+        self.change_timer_1_init = 60 * 10
+        self.change_timer_1 = self.change_timer_1_init
+
+    def set_init_frame(self):
+        if self.state == 0:
+            self.current_frame = 0
+            self.curr_anim_no_of_frs = 3
+        else:
+            self.current_frame = 4
+            self.curr_anim_no_of_frs = 7
+
+    def set_frame(self):
+        self.current_frame += self.ANIM_SPD
+        if self.current_frame >= self.curr_anim_no_of_frs + 0.9:
+            self.current_frame = 0
+
+    def make_move(self):
+        if self.waypoints[0] == 2137:
+            return
+
+        target_x, target_y = self.waypoints[self.waypoint_index]
+        dx = target_x - self.x
+        dy = target_y - self.y
+        distance = (dx ** 2 + dy ** 2) ** 0.5
+
+        if distance < self.SPD:
+            self.waypoint_index += 1
+
+        if self.move_pattern == 0:
+            if self.waypoint_index > 2:
+                self.waypoint_index = 0
+                self.waypoints = enemy_path["boss_loop"]
+                self.move_pattern = 1
+
+        if self.move_pattern == 1:
+            self.change_timer_1 -= 1
+            if self.waypoint_index > 3:
+                self.waypoint_index = 0
+            target_x, target_y = self.waypoints[self.waypoint_index]
+
+        if self.change_timer_1 <= 0:
+            self.bullet_set_pattern(random.randint(0, 3))
+            self.bullet_freq = random.choice([0, 1, 4, 5, 3])
+            self.bullet_set_freq()
+            self.change_timer_1 = self.change_timer_1_init / 2
+
+        dx = target_x - self.x
+        dy = target_y - self.y
+        angle = math.atan2(dy, dx)
+        self.x += self.SPD * math.cos(angle)
+        self.y += self.SPD * math.sin(angle)
 
 
 class Bullet:
@@ -363,26 +454,39 @@ class Bullet:
         self.spd = spd
 
     def check_type(self):
-        if self.bullet_type == 0:
+        if self.bullet_type == 0 or self.bullet_type == 3:
+            # player's small bullets
             self.set_vars(3, 0, 7, 11, 8)
-        elif self.bullet_type == 1:
-            self.set_vars(1, 1, 5, 5, 4)
-        elif self.bullet_type == 2:
+        elif self.bullet_type == 2 or self.bullet_type == 4:
+            # player's big bullets
             self.set_vars(0, 0, 13, 11, 8)
+        elif self.bullet_type == 1:
+            # small enemy bullet
+            self.set_vars(1, 1, 5, 5, 4)
 
     def set_frame(self):
         if self.is_hazard == 0:
-            if psl[0] > 16:
-                self.current_frame = 4
-            else:
+            if psl[0] in range(0, 31):
                 self.current_frame = 3
+            elif psl[0] in range(32, 79):
+                self.current_frame = 4
+            elif psl[0] in range(80, 127):
+                if self.is_homing:
+                    self.current_frame = 5
+                else:
+                    self.current_frame = 4
+            elif psl[0] in range(128, 132):
+                if self.is_homing:
+                    self.current_frame = 6
+                else:
+                    self.current_frame = 4
         else:
             self.current_frame = 0
 
     def make_move(self):
         if self.is_homing:
-            self.x += self.spd * math.cos(self.angle)
-            self.y += self.spd * -math.sin(self.angle)
+            self.x += self.spd * 1.5 * math.cos(self.angle)
+            self.y += self.spd * 1.5 * -math.sin(self.angle)
         else:
             self.x += self.hsp
             self.y += self.vsp
@@ -394,13 +498,16 @@ class Bullet:
 
 
 # bruh nwm co ja tu zrobilemxddd
-def create_bullet(x, y, is_hazard, is_homing, move_to_x, move_to_y, bullet_type, angle_offset):
+def create_bullet(x, y, is_hazard, is_homing, move_to_x, move_to_y, bullet_type, angle_offset, consider_spd):
     bullet = Bullet()
     bullet.x, bullet.y = x - bullet.width / 2, y
     bullet.is_hazard = is_hazard
     bullet.vsp = -bullet.spd
     bullet.is_homing = is_homing
-    bullet.angle = calc_angle(bullet.x, bullet.y, move_to_x, move_to_y) + math.radians(angle_offset)
+    if consider_spd:
+        bullet.angle = calc_angle_spd(bullet.x, bullet.y, move_to_x, move_to_y, bullet.spd) + math.radians(angle_offset)
+    else:
+        bullet.angle = calc_angle(bullet.x, bullet.y, move_to_x, move_to_y) + math.radians(angle_offset)
     bullet.bullet_type = bullet_type
     bullet.check_type()
     bullet_list.append(bullet)
