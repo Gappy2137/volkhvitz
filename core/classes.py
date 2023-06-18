@@ -131,7 +131,7 @@ class Player:
 
     def hit(self):
         if not self.invis:
-            psl[0] -= math.floor(psl[0] / 6)
+            psl[0] -= math.floor(psl[0] / 5)
             psl[2] -= 1
             self.invis = True
 
@@ -165,7 +165,7 @@ class Enemy:
         self.SHOOTING_CAPABLE = True
         # Var.
         self.start_shooting_delay = random.randint(0, 255)
-        self.bullet_init_freq = 20
+        self.bullet_init_freq = 40
         self.bullet_shooting_freq = self.bullet_init_freq
         self.current_frame = 0
         self.curr_anim_no_of_frs = 3
@@ -241,7 +241,6 @@ class Enemy:
             self.x += self.SPD * math.cos(angle)
             self.y += self.SPD * math.sin(angle)
 
-
     def bullet_set_freq(self):
         if self.bullet_freq == 0:
             self.bullet_shooting_freq = self.bullet_init_freq
@@ -312,8 +311,8 @@ class FairyRed(Enemy):
         self.HITBOX_X = 10
         self.HITBOX_Y = 11
         self.HITBOX_SIZE = 12
-        self.bullet_init_freq = 60
-        self.bullet_shooting_freq = random.randint(60, 90)
+        self.bullet_init_freq = 80
+        self.bullet_shooting_freq = random.randint(60, 120)
         self.bullet_type = 0
 
 
@@ -467,7 +466,7 @@ class Bullet:
             self.set_vars(0, 0, 13, 11, 8)
         elif self.bullet_type == 1:
             # small enemy bullet
-            self.set_vars(1, 1, 5, 5, 4)
+            self.set_vars(1, 1, 5, 5, 3)
 
     def set_frame(self):
         if self.is_hazard == 0:
@@ -590,7 +589,7 @@ class Powerup:
         self.y += self.vsp
 
     def collect(self):
-        psl[0] += 1
+        psl[0] += 2
         powerup_list.remove(self)
         del self
 
