@@ -102,9 +102,9 @@ class Player:
 
         if psl[0] in range(0, 31):
             self.bullet_type = 0
-        elif psl[0] in range(32, 79):
+        elif psl[0] in range(32, 63):
             self.bullet_type = 2
-        elif psl[0] in range(80, 127):
+        elif psl[0] in range(64, 127):
             self.bullet_type = 3
         elif psl[0] in range(128, 164):
             self.bullet_type = 4
@@ -113,7 +113,7 @@ class Player:
             if self.can_shoot is True:
                 create_bullet(self.x + self.WIDTH/2, self.y, False, False, 0, 0, self.bullet_type, 0, False)
                 if self.bullet_type == 3:
-                    create_bullet(self.x + self.WIDTH / 2, self.y, False, True, to_x, to_y, self.bullet_type, 0, True)
+                    create_bullet(self.x + self.WIDTH / 2, self.y + 12, False, True, to_x, to_y, self.bullet_type, 0, True)
                 if self.bullet_type == 4:
                     create_bullet(self.x - 2, self.y + 12, False, True, to_x, to_y, self.bullet_type, 0, True)
                     create_bullet(self.x + self.WIDTH, self.y + 12, False, True, to_x, to_y, self.bullet_type, 0, True)
@@ -322,7 +322,7 @@ class FairyBlue(FairyRed):
         self.SPR = BLUE_FAIRY_SPRITES
         self.health = 8
         self.bullet_type = 0
-        self.bullet_shooting_freq = 20
+        self.bullet_shooting_freq = 60
 
 
 class Wisp(Enemy):
@@ -351,7 +351,7 @@ class Tick(Enemy):
         self.HITBOX_Y = 13
         self.HITBOX_SIZE = 7
         self.SHOOTING_CAPABLE = False
-        self.SPD = 1.25
+        self.SPD = 1.25 * 2
         self.ANIM_SPD = 0.3
         self.health = 1
 
@@ -366,9 +366,9 @@ class Boss(Enemy):
         self.HITBOX_X = 16
         self.HITBOX_Y = 22
         self.HITBOX_SIZE = 11
-        self.SPD = 1.25
+        self.SPD = 1.25 * 1.6
         self.ANIM_SPD = 0.12
-        self.health_max = 500
+        self.health_max = 800
         self.health = self.health_max
         # 0 - moving, 1 - attack
         self.state = 0
@@ -472,9 +472,9 @@ class Bullet:
         if self.is_hazard == 0:
             if psl[0] in range(0, 31):
                 self.current_frame = 3
-            elif psl[0] in range(32, 79):
+            elif psl[0] in range(32, 63):
                 self.current_frame = 4
-            elif psl[0] in range(80, 127):
+            elif psl[0] in range(64, 127):
                 if self.is_homing:
                     self.current_frame = 5
                 else:

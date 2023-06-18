@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     #create_enemy(spawn_x, spawn_y - 256, FairyBlue(), enemy_path["group_3"], 0)
     #create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 2, 0, (0, 1))
-    boss = create_enemy(spawn_x, spawn_y - 9000, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
+    boss = create_enemy(spawn_x, spawn_y - (32 * 220) * 1.6, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
     #create_enemy(64, 200, FairyRed(), enemy_path["group_none"], 0, 0, (-1, -1))
 
 
@@ -175,6 +175,9 @@ if __name__ == '__main__':
                 enemy.set_frame()
                 enemy.check_vitals()
                 enemy.make_move()
+                if collision(enemy.x + enemy.HITBOX_X, enemy.y + enemy.HITBOX_Y, enemy.HITBOX_SIZE, enemy.HITBOX_SIZE,
+                             player.x + player.HITBOX_X, player.y + player.HITBOX_Y, player.HITBOX_SIZE, player.HITBOX_SIZE):
+                    player.hit()
                 if enemy.y > BARS_BOTTOM + 64:
                     enemy.destroy(False)
                 enemy.shoot_bullet(player.x + player.WIDTH/2, player.y + player.HEIGHT/2, 1)
@@ -232,7 +235,7 @@ if __name__ == '__main__':
                 health_percentage = boss.health / boss.health_max
                 health_bar_width = int(health_percentage * 368 - 8)
 
-                pygame.draw.rect(screen, (255, 0, 0), (16 + 8, 2, health_bar_width - 8, 14))
+                pygame.draw.rect(screen, (255, 0, 0), (16 + 16, 2, health_bar_width - 8, 14))
 
         pygame.display.flip()
 
