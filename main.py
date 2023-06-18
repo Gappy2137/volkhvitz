@@ -94,12 +94,6 @@ if __name__ == '__main__':
 
         if in_game is True:
 
-            keyss = pygame.key.get_pressed()
-            if keyss[pygame.K_a]:
-                psl[0] -= 1
-            if keyss[pygame.K_d]:
-                psl[0] += 1
-
             player.get_keys()
 
             player.set_speed()
