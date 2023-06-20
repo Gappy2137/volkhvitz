@@ -1,7 +1,5 @@
 from imports import *
 
-# niewazne jak zle jest to napisane to jest na szybko musisz zrozumiec xdd
-
 if __name__ == '__main__':
     clock = pygame.time.Clock()
 
@@ -11,26 +9,14 @@ if __name__ == '__main__':
     pygame.display.set_icon(pygame.image.load(os.path.join('spritesheet', 'icon.png')))
     screen = pygame.display.set_mode(RESOLUTION, pygame.SCALED)
 
+    # Utworz obiekt gracza
     player = Player()
 
-    #en = [None] * 11
-
-    #en[0] = create_enemy(pos_x[1], spawn_y, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
-    #en[1] = create_enemy(pos_x[1], en[0].y - 32, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
-    #en[2] = create_enemy(pos_x[1], en[1].y - 32, FairyRed(), enemy_path["group_1"], 0, 0, (-1, -1))
-    #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_1"], 2)
-    #create_enemy(spawn_x, spawn_y, FairyRed(), enemy_path["group_2"], 0)
-    #create_enemy(spawn_x, spawn_y - 32, FairyRed(), enemy_path["group_2"], 1)
-    #create_enemy(spawn_x, spawn_y - 64, FairyRed(), enemy_path["group_2"], 2)
-
-    #create_enemy(spawn_x, spawn_y - 256, FairyBlue(), enemy_path["group_3"], 0)
-    #create_enemy(200, 200, FairyBlue(), enemy_path["group_1"], 2, 0, (0, 1))
+    # Utworz bossa
     boss = create_enemy(spawn_x, spawn_y - (32 * 220) * 1.6, Boss(), enemy_path["boss_entry"], 0, 0, (-1, -1))
-    #create_enemy(64, 200, FairyRed(), enemy_path["group_none"], 0, 0, (-1, -1))
 
-
+    # Umiesc wszystkich przeciwnikow na mapie
     enemy_place()
-
 
     screen.fill((0, 0, 0))
 
@@ -40,12 +26,12 @@ if __name__ == '__main__':
 
     while True:
         for event in pygame.event.get():
-            # Quit event.
+            # Wyjscie z gry
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            # Menu option choice.
+            # Opcje
             if event.type == pygame.KEYDOWN:
                 if in_menu is True:
                     if event.key == pygame.K_UP:
@@ -94,6 +80,9 @@ if __name__ == '__main__':
 
         if in_game is True:
 
+            # Glowna petla gry
+
+            # Metody gracza
             player.get_keys()
 
             player.set_speed()
@@ -106,7 +95,9 @@ if __name__ == '__main__':
 
             player.invis_logic()
 
-            #screen.fill((255, 100, 255))
+
+            # Tlo
+
             bg.set_frame(0)
             bg.make_scroll(True)
             bg2.set_frame(0)
@@ -121,35 +112,36 @@ if __name__ == '__main__':
             bg_render(screen, bg2)
 
 
+            # Kolizje z pociskami
+
             for bullet in bullet_list:
-                #pygame.draw.rect(screen, (0, 255, 255), (bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_x, bullet.width, bullet.height))
                 if bullet.is_hazard:
                     if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
                                  player.x + player.HITBOX_X, player.y + player.HITBOX_Y, player.HITBOX_SIZE, player.HITBOX_SIZE):
-                        #bullet_list.remove(bullet)
                         bullet_remove_list.append(bullet)
                         player.hit()
                 for enemy in enemy_list:
                     if collision(bullet.x + bullet.hitbox_x, bullet.y + bullet.hitbox_y, bullet.width, bullet.height,
                                  enemy.x, enemy.y, enemy.WIDTH, enemy.WIDTH):
                         if not bullet.is_hazard:
-                            # bullet_list.remove(bullet)
                             bullet_remove_list.append(bullet)
-                            #enemy_list.remove(enemy)
                             enemy.health -= bullet.damage
                             create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
                                       random.uniform(enemy.y + enemy.HEIGHT/2, enemy.y + enemy.HEIGHT),
                                       0, 0, 0, 0, 0, 0.45)
                             if enemy.health <= 0:
+                                # Efekty graficzne po zniszczeniu przeciwnika
                                 for i in range(random.randint(6, 12)):
                                     create_fx(random.uniform(enemy.x, enemy.x + enemy.WIDTH),
                                               random.uniform(enemy.y + enemy.HEIGHT / 2, enemy.y + enemy.HEIGHT),
                                               random.uniform(1, 3), random.uniform(2, 4), random.uniform(0, 359), 1, 0, 0.15)
 
+            # Usun pociski
             for bullet in bullet_remove_list:
                 if bullet in bullet_list:
                     bullet_list.remove(bullet)
 
+            # Autonaprowadzajace pociski
             if enemy_list.__len__() > 0:
                 min_distance = float('inf')
                 xx = 0
@@ -165,6 +157,7 @@ if __name__ == '__main__':
             else:
                 player.shoot_bullet(player.x + player.WIDTH / 2, 0)
 
+            # Logika przeciwnikow
             for enemy in enemy_list:
                 enemy.set_frame()
                 enemy.check_vitals()
@@ -209,6 +202,7 @@ if __name__ == '__main__':
 
             hud_render(screen)
 
+            # power, score, lives logic
             if psl[0] > 128:
                 psl[0] = 128
 
@@ -219,12 +213,14 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
 
+            # Wyswietlanie punktow, power oraz zyc
             text_render(screen, str(psl[0]), POWER_X, POWER_Y)
             text_render(screen, f"{psl[1]:04}", SCORE_X, SCORE_Y)
 
             for i in range(psl[2]):
                 screen.blit(HUD_SPRITES[10], (LIVES_X + (i % 5) * 32, LIVES_Y + (i // 5) * 32))
 
+            # boss healtbar
             if boss.move_pattern > 0:
                 health_percentage = boss.health / boss.health_max
                 health_bar_width = int(health_percentage * 368 - 8)

@@ -47,6 +47,7 @@ class Player:
 
     def set_speed(self):
         if self.can_move:
+            # sprawdzanie klawiszy i ustawianie zmiennych hsp i vsp
             if self.keys[pygame.K_DOWN] and not self.keys[pygame.K_UP]:
                 if not (self.y + self.HEIGHT >= BARS_BOTTOM):
                     self.vsp = self.SPD
@@ -61,12 +62,12 @@ class Player:
                 self.vsp = 0
 
             if self.keys[pygame.K_LEFT] and not self.keys[pygame.K_RIGHT]:
-                if not (self.x< BARS_LEFT):
+                if not (self.x < BARS_LEFT):
                     self.hsp = -self.SPD
                 else:
                     self.hsp = 0
             elif self.keys[pygame.K_RIGHT] and not self.keys[pygame.K_LEFT]:
-                if not (self.x + self.WIDTH >= BARS_RIGHT):
+                if not (self.x + self.WIDTH >= BARS_RIGHT + 16):
                     self.hsp = self.SPD
                 else:
                     self.hsp = 0
@@ -610,7 +611,7 @@ def create_powerup(x, y):
 class Background:
     def __init__(self):
         self.SPR = BG_SPRITES
-        self.SPD = 0.5
+        self.SPD = 1
         self.HEIGHT = 9696
         self.frame = 0
         self.y = -self.HEIGHT + 480
